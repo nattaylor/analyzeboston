@@ -282,20 +282,24 @@ ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
 
 	function reqListener() {
 		if (this.status == 500) {
+			//We build a results object since it is not provided by the endpoint
 			results = {
 				"success": false,
 				"error": {
-					"query": ["500 Error: often a \"Class 22 - Data Exception\" such as: invalid_character_value_for_cast or division_by_zero, etc.  More at https://www.postgresql.org/docs/10/static/errcodes-appendix.html"]
+					"query": ["500 Error: often a \"Class 22 - Data Exception\" which occurs after the query begins executing such as: invalid_character_value_for_cast or division_by_zero, etc.  More at https://www.postgresql.org/docs/10/static/errcodes-appendix.html"]
 				}
 			}
 		} else {
 			results = JSON.parse(this.responseText);    
 		}
 
-		if(results.success !== undefined && !results.success) {
+		if(typeof results.success !== 'undefined' && !results.success) {
 			div = document.createElement("div");
 			div.setAttribute("id","results");
-			div.innerHTML = results.error.query[0];
+			const error_regex = /([^\^]*)\^/
+			error_extract = error_regex.exec(results.error.query[0]);
+			error_msg = (error_extract !== null && error_extract.hasOwnProperty(1)) ? error_extract[1] : results.error.query[0]
+			div.innerHTML = error_msg;
 			document.body.appendChild(div);
 			return true;
 		}
