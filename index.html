@@ -87,86 +87,94 @@
 	}
 
 	div.lightbox {
-	display: none;
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;z-index: 5;
-}
+		display: none;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;z-index: 5;
+	}
 
-div.lightbox:target {
-	display: table;
-}
+	#results-ta {
+		resize: none;
+		border-collapse: collapse;
+		border: 0;
+		height: 0;
+		width: 0;
+	}
 
-div.lightbox figure {
-	display: table-cell;
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	height: 100%;
-	vertical-align: middle;
-}
+	div.lightbox:target {
+		display: table;
+	}
 
-div.lightbox figure figcaption {
-	display: block;
-	margin: auto;
-	padding: 8px;
-	background-color: white;
-	height: 75%;
-	position: relative;
-	overflow: auto;
-	border: 1px #000000 solid;
-	border-radius: 10px;
-	text-align: justify;
-	font-size: 14px;
-}
+	div.lightbox figure {
+		display: table-cell;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		vertical-align: middle;
+	}
 
-div.lightbox figure .closemsg {
-	display: block;
-	margin: auto;
-	height: 0;
-	overflow: visible;
-	text-align: right;
-	z-index: 5001;
-	cursor: default;
-}
+	div.lightbox figure figcaption {
+		display: block;
+		margin: auto;
+		padding: 8px;
+		background-color: white;
+		height: 75%;
+		position: relative;
+		overflow: auto;
+		border: 1px #000000 solid;
+		border-radius: 10px;
+		text-align: justify;
+		font-size: 14px;
+	}
 
-div.lightbox figure .closemsg, div.lightbox figure figcaption {
-	width: 75%;
-}
+	div.lightbox figure .closemsg {
+		display: block;
+		margin: auto;
+		height: 0;
+		overflow: visible;
+		text-align: right;
+		z-index: 5001;
+		cursor: default;
+	}
 
-.closemsg::after {
-	content: "\00D7";
-	display: inline-block;
-	position: relative;
-	right: -20px;
-	top: -10px;
-	z-index: 5002;
-	color: #ffffff;
-	border: 1px #ffffff solid;
-	border-radius: 10px;
-	width: 20px;
-	height: 20px;
-	line-height: 18px;
-	text-align: center;
-	margin: 0;
-	background-color: #000000;
-	font-weight: bold;
-	cursor: pointer;
-}
+	div.lightbox figure .closemsg, div.lightbox figure figcaption {
+		width: 75%;
+	}
 
-.closemsg::before {
-	content: "";
-	display: block;
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background-color: #000000;
-	opacity: 0.85;
-}
+	.closemsg::after {
+		content: "\00D7";
+		display: inline-block;
+		position: relative;
+		right: -20px;
+		top: -10px;
+		z-index: 5002;
+		color: #ffffff;
+		border: 1px #ffffff solid;
+		border-radius: 10px;
+		width: 20px;
+		height: 20px;
+		line-height: 18px;
+		text-align: center;
+		margin: 0;
+		background-color: #000000;
+		font-weight: bold;
+		cursor: pointer;
+	}
+
+	.closemsg::before {
+		content: "";
+		display: block;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #000000;
+		opacity: 0.85;
+	}
 </style>
 </head>
 <body>
@@ -296,17 +304,29 @@ div.lightbox figure .closemsg, div.lightbox figure figcaption {
 		table = document.createElement("table");
 		table.setAttribute("id","results");
 		html = "<thead><tr>";
+		headers = []
 		for (var field of results.result.fields) {
 			html += "<th>"+field.id+"</th>";
+			headers.push(field.id);
 		}
+		csv="\""+headers.join("\",\"")+"\"\n";
+		tsv=headers.join("\t")+"\n";
 		html += "</thead></tr>";
 		for (var record of results.result.records) {
 			html += "<tr>";
+			fields = [];
 			for (var field of results.result.fields) {
 				html += "<td>"+record[field.id]+"</td>";
+				fields.push(record[field.id])
 			}
 			html += "</tr>";
+			csv += "\""+fields.join("\",\"")+"\"\n";
+			tsv += fields.join("\t")+"\n";
 		}
+		html+="<a href=\"data:text/csv;charset=utf-8,"+encodeURI(csv)+"\" target\"_blank\" download=\"results.csv\">CSV</a>&nbsp;";
+		html+="<a href=\"data:text/tsv;charset=utf-8,"+encodeURI(tsv)+"\" target\"_blank\" download=\"results.tsv\">TSV</a>&nbsp;";
+		html+="<a href=\"javascript:copyResults()\">COPY</a>"
+		html+="<textarea id=\"results-ta\">"+tsv+"</textarea>"
 		table.innerHTML = html;
 		document.body.appendChild(table);
 	}
@@ -314,6 +334,12 @@ div.lightbox figure .closemsg, div.lightbox figure figcaption {
 	function rawurlencode (str) {
 		str = (str+'').toString();        
 		return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A');
+	}
+
+	function copyResults() {
+		var copy = document.querySelector("#results-ta");
+		copy.select();
+		document.execCommand('copy');
 	}
 </script>
 </body>
