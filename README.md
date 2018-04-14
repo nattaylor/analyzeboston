@@ -6,21 +6,30 @@ Edit and execute SQL queries in the browser using the CKAN DataStore API on the 
 
 Get the latest Ace editor `src-noconflict/` https://github.com/ajaxorg/ace-builds/ 
 
-<!--
-    http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
+
+## DataStore API Docs
+
+http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
+
+
+
  - Scrape schema: `SELECT * FROM "" LIMIT 1;` response.result.fields ex {type: "text", id: "year"}
     - default transforms (e.g. into decimals, etc)
-    - add typeahead
+    - ~add typeahead~
     - https://data.boston.gov/api/3/action/package_list?limit=150 -> https://data.boston.gov/api/3/action/datastore_search?id=6ddcd912-32a0-43df-9908-63574f8c7e77&limit=0
     - https://data.boston.gov/api/3/action/package_search?q=*:*&rows=150&
     - transform hints: nullif('','')::decimal
- - Errors
-    - look at the response.success property
-    - display the error!
+ - ~Errors~
+    - ~look at the response.success property~
+    - ~display the error!~
  - Download as CSV/TSV
  - Copy to clipboard
  - History
     - show query history    
+
+## Examples
+
+```
 {
     "help": "https://data.boston.gov/api/3/action/help_show?name=datastore_search_sql",
     "success": false,
@@ -34,7 +43,9 @@ Get the latest Ace editor `src-noconflict/` https://github.com/ajaxorg/ace-build
         "__type": "Validation Error"
     }
 }
+```
 
+```
 {
     "help": "https://data.boston.gov/api/3/action/help_show?name=datastore_search_sql",
     "success": true,
@@ -136,5 +147,4 @@ Get the latest Ace editor `src-noconflict/` https://github.com/ajaxorg/ace-build
         }],
         "sql": "SELECT\n    *\nFROM \"6ddcd912-32a0-43df-9908-63574f8c7e77\"\nLIMIT 1;"
     }
-}
--->
+}```
