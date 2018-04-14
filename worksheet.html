@@ -3,320 +3,325 @@
 <head>
 <title>SQL Client for data.boston.gov</title>
 <style type="text/css" media="screen">
-    :root {
-        --editor-width:600px;
-        --header-height:25px;
-    }
+	:root {
+		--editor-width:600px;
+		--header-height:25px;
+	}
 
-    html {
-        font-family: sans-serif;
-    }
-    body {
-        margin: 0;
-    }
-    #header {
-        height: var(--header-height);
-        left: 0;
-        right: 0;
-        top: 0;
-    }
+	html {
+		font-family: sans-serif;
+	}
+	body {
+		margin: 0;
+	}
+	#header {
+		height: var(--header-height);
+		left: 0;
+		right: 0;
+		top: 0;
+	}
 
-    #editor { 
-        position: absolute;
-        top: var(--header-height);
-        bottom: 0;
-        left: 0;
-        width:var(--editor-width);
-    }
+	#editor { 
+		position: absolute;
+		top: var(--header-height);
+		bottom: 0;
+		left: 0;
+		width:var(--editor-width);
+	}
 
-    #execute {
-        position: absolute;
-        top: var(--header-height);
-        right: 0;
-        margin-right: calc(100% - var(--editor-width));
-        z-index: 2;
-        border-collapse: collapse;
-        border: 0;
-        border-bottom: 3px solid #288BE4;
-        padding:0;
-        text-transform: uppercase;
-        font-size: x-large;
-        font-weight: bold;
-    }
+	#execute {
+		position: absolute;
+		top: var(--header-height);
+		right: 0;
+		margin-right: calc(100% - var(--editor-width));
+		z-index: 2;
+		border-collapse: collapse;
+		border: 0;
+		border-bottom: 3px solid #288BE4;
+		padding:0;
+		text-transform: uppercase;
+		font-size: x-large;
+		font-weight: bold;
+	}
 
-    #set {
-        position: absolute;
-        top: var(--header-height);
-        right: 0;
-        margin-right: calc((100% - var(--editor-width)) + 60px);
-        z-index: 2;
-    }
+	#set {
+		position: absolute;
+		top: var(--header-height);
+		right: 0;
+		margin-right: calc((100% - var(--editor-width)) + 60px);
+		z-index: 2;
+	}
 
-    #results {
-        position: absolute;
-        right:0;
-        top: var(--header-height);
-        bottom:0;
-        width:calc(100% - var(--editor-width));
-        border-collapse:collapse;
-    }
+	#results {
+		position: absolute;
+		right:0;
+		top: var(--header-height);
+		bottom:0;
+		width:calc(100% - var(--editor-width));
+		border-collapse:collapse;
+	}
 
-    #results td {
-        border:1px solid #efefef;
-        padding:2px;
-    }
+	#results td {
+		border:1px solid #efefef;
+		padding:2px;
+	}
 
-    #results th {
-        text-transform: uppercase;
-        font-weight: normal;
-        text-align: left;
-        background-color: #efefef;
-        padding:2px;
-    }
+	#results th {
+		text-transform: uppercase;
+		font-weight: normal;
+		text-align: left;
+		background-color: #efefef;
+		padding:2px;
+	}
 
-    #results tr:nth-child(even) {
-        background-color: #f9f7f7;
-    }
+	#results tr:nth-child(even) {
+		background-color: #f9f7f7;
+	}
 
-    #results tr:hover {
-        background-color: #efefef;
-    }
+	#results tr:hover {
+		background-color: #efefef;
+	}
 
-    #results tr:focus {
-        background-color: cyan;
-    }
+	#results tr:focus {
+		background-color: cyan;
+	}
 
-    div.lightbox {
-    display: none;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;z-index: 5;
+	div.lightbox {
+	display: none;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;z-index: 5;
 }
 
 div.lightbox:target {
-    display: table;
+	display: table;
 }
 
 div.lightbox figure {
-    display: table-cell;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    vertical-align: middle;
+	display: table-cell;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	vertical-align: middle;
 }
 
 div.lightbox figure figcaption {
-    display: block;
-    margin: auto;
-    padding: 8px;
-    background-color: white;
-    height: 75%;
-    position: relative;
-    overflow: auto;
-    border: 1px #000000 solid;
-    border-radius: 10px;
-    text-align: justify;
-    font-size: 14px;
+	display: block;
+	margin: auto;
+	padding: 8px;
+	background-color: white;
+	height: 75%;
+	position: relative;
+	overflow: auto;
+	border: 1px #000000 solid;
+	border-radius: 10px;
+	text-align: justify;
+	font-size: 14px;
 }
 
 div.lightbox figure .closemsg {
-    display: block;
-    margin: auto;
-    height: 0;
-    overflow: visible;
-    text-align: right;
-    z-index: 5001;
-    cursor: default;
+	display: block;
+	margin: auto;
+	height: 0;
+	overflow: visible;
+	text-align: right;
+	z-index: 5001;
+	cursor: default;
 }
 
 div.lightbox figure .closemsg, div.lightbox figure figcaption {
-    width: 75%;
+	width: 75%;
 }
 
 .closemsg::after {
-    content: "\00D7";
-    display: inline-block;
-    position: relative;
-    right: -20px;
-    top: -10px;
-    z-index: 5002;
-    color: #ffffff;
-    border: 1px #ffffff solid;
-    border-radius: 10px;
-    width: 20px;
-    height: 20px;
-    line-height: 18px;
-    text-align: center;
-    margin: 0;
-    background-color: #000000;
-    font-weight: bold;
-    cursor: pointer;
+	content: "\00D7";
+	display: inline-block;
+	position: relative;
+	right: -20px;
+	top: -10px;
+	z-index: 5002;
+	color: #ffffff;
+	border: 1px #ffffff solid;
+	border-radius: 10px;
+	width: 20px;
+	height: 20px;
+	line-height: 18px;
+	text-align: center;
+	margin: 0;
+	background-color: #000000;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 .closemsg::before {
-    content: "";
-    display: block;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000000;
-    opacity: 0.85;
+	content: "";
+	display: block;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000000;
+	opacity: 0.85;
 }
 </style>
 </head>
 <body>
 <div id="header">
-    <a href="http://data.boston.gov"><img src="https://data.boston.gov/img/Analyze_Boston_logo.svg" style="height:20px;width:200px;vertical-align:middle;margin:2px;" border="0"></a> <span><strong>SQL Client</strong> by <a href="http://nattaylor.com" target="_blank">Nat Taylor</a></span> <span><a href="#help">Help</a></span>
+	<a href="http://data.boston.gov"><img src="https://data.boston.gov/img/Analyze_Boston_logo.svg" style="height:20px;width:200px;vertical-align:middle;margin:2px;" border="0"></a> <span><strong>SQL Client</strong> by <a href="http://nattaylor.com" target="_blank">Nat Taylor</a></span> <span><a href="#help">Help</a></span>
 </div>
 <div id="editor">SELECT
-    TO_CHAR("ISSUED_DATE", 'YYYY') AS YEAR,
-    COUNT(*) PERMITS,
-    COUNT(DISTINCT "Parcel_ID") PROPERTIES,
-    SUM("DECLARED_VALUATION"::decimal) TOTAL_VALUE
+	TO_CHAR("ISSUED_DATE", 'YYYY') AS YEAR,
+	COUNT(*) PERMITS,
+	COUNT(DISTINCT "Parcel_ID") PROPERTIES,
+	SUM("DECLARED_VALUATION"::decimal) TOTAL_VALUE
 FROM "6ddcd912-32a0-43df-9908-63574f8c7e77"
 WHERE
-    "ZIP" = '02128'
-    AND "ADDRESS" NOT ILIKE '%%Harborside%%'
-    AND "ADDRESS" NOT ILIKE '%%Logan%%'
-    AND "ADDRESS" NOT ILIKE '%%Terminal%%'
-    AND "DECLARED_VALUATION"::decimal < 500000
+	"ZIP" = '02128'
+	AND "ADDRESS" NOT ILIKE '%%Harborside%%'
+	AND "ADDRESS" NOT ILIKE '%%Logan%%'
+	AND "ADDRESS" NOT ILIKE '%%Terminal%%'
+	AND "DECLARED_VALUATION"::decimal < 500000
 GROUP BY TO_CHAR("ISSUED_DATE", 'YYYY')
 ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
 <button id="execute">Run Query</button>
 <!-- <button id="set">Set</button> -->
 <div id="results"></div>
 <div class="lightbox" id="help">
-    <figure>
-        <a href="#" class="closemsg"></a>
-        <figcaption>
-            <h1>Help</h1>
-            <p><strong>Analyze Boston</strong> at <a href="">data.boston.gov</a> is "is the City of Boston's open data hub" with over 134 datasets and this Analyze Boston SQL Client is a tool for executing queries and displaying the results.</p>
-            <h2>Usage</h2>
-            <p>A dataset like <a href="https://data.boston.gov/dataset/property-assessment">Property Assesment</a> has a resource key which can be found in the preview link, like <code>https://data.boston.gov/dataset/property-assessment/resource/fd351943-c2c6-4630-992d-3f895360febd</code> on which you can run SQL.  This tool uses the SQL endpoint (<a href="http://docs.ckan.org/en/latest/maintaining/datastore.html#ckanext.datastore.logic.action.datastore_search_sql">documentation</a>.)</p>
-            <h2>Troubleshooting</h2>
-            <p><strong>To see error messages</strong> enable this extension <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">allow-control-allow-origin:*</a></p>
-            <p>The tool uses CKAN DataStore, which is a thin layer on top of a PostgreSQL database, so the PostgreSQL docs are very helpful.  MySQL users may want to read <a href="https://wiki.postgresql.org/wiki/Things_to_find_out_about_when_moving_from_MySQL_to_PostgreSQL">Things to find out about when moving from MySQL to PostgreSQL</a>.  The tool will just say "error" when execute invalid SQL, because the DataStore extension does not give detailed error messages.  Common Problems Include: </p>
-            <ul>
-                <li>A system identifiers (e.g field names, table names, etc) wasn't <strong>doublequoted</strong></li>
-                <li>A string wasn't <strong>single quoted</strong></li>
-                <li>A nonexistent field was referenced</li>
-                <li>A <code>::cast</code> failed</li>
-            </ul>
-        </figcaption>
-    </figure>
+	<figure>
+		<a href="#" class="closemsg"></a>
+		<figcaption>
+			<h1>Help</h1>
+			<p><strong>Analyze Boston</strong> at <a href="">data.boston.gov</a> is "is the City of Boston's open data hub" with over 134 datasets and this Analyze Boston SQL Client is a tool for executing queries and displaying the results.</p>
+			<h2>Usage</h2>
+			<p>A dataset like <a href="https://data.boston.gov/dataset/property-assessment">Property Assesment</a> has a resource key which can be found in the preview link, like <code>https://data.boston.gov/dataset/property-assessment/resource/fd351943-c2c6-4630-992d-3f895360febd</code> on which you can run SQL.  This tool uses the SQL endpoint (<a href="http://docs.ckan.org/en/latest/maintaining/datastore.html#ckanext.datastore.logic.action.datastore_search_sql">documentation</a>.)</p>
+			<h2>Troubleshooting</h2>
+			<p><strong>To see error messages</strong> enable this extension <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">allow-control-allow-origin:*</a></p>
+			<p>The tool uses CKAN DataStore, which is a thin layer on top of a PostgreSQL database, so the PostgreSQL docs are very helpful.  MySQL users may want to read <a href="https://wiki.postgresql.org/wiki/Things_to_find_out_about_when_moving_from_MySQL_to_PostgreSQL">Things to find out about when moving from MySQL to PostgreSQL</a>.  The tool will just say "error" when execute invalid SQL, because the DataStore extension does not give detailed error messages.  Common Problems Include: </p>
+			<ul>
+				<li>A system identifiers (e.g field names, table names, etc) wasn't <strong>doublequoted</strong></li>
+				<li>A string wasn't <strong>single quoted</strong></li>
+				<li>A nonexistent field was referenced</li>
+				<li>A <code>::cast</code> failed</li>
+			</ul>
+		</figcaption>
+	</figure>
 </div>
 <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="src-noconflict/ext-language_tools.js"></script>
+<script src="schema.js"></script>
 <script>
-    var editor = ace.edit("editor");
-    editor.session.setMode("ace/mode/sql");
-    editor.renderer.setScrollMargin(10, 10, 10, 10);
-    
-    /*
-    var langTools = ace.require("ace/ext/language_tools");
-    editor.setOptions({
-        enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: false
-    });
-    var rhymeCompleter = {
-        getCompletions: function(editor, session, pos, prefix, callback) {
-            if (prefix.length === 0) { callback(null, []); return }
-            $.getJSON(
-                "http://rhymebrain.com/talk?function=getRhymes&word=" + prefix,
-                function(wordList) {
-                    // wordList like [{"word":"flow","freq":24,"score":300,"flags":"bc","syllables":"1"}]
-                    callback(null, wordList.map(function(ea) {
-                        return {name: ea.word, value: ea.word, score: ea.score, meta: "rhyme"}
-                    }));
-                })
-        }
-    }
-    langTools.addCompleter(rhymeCompleter);
-    */
+	var editor = ace.edit("editor");
+	editor.session.setMode("ace/mode/sql");
+	editor.renderer.setScrollMargin(10, 10, 10, 10);
+	
+	var langTools = ace.require("ace/ext/language_tools");
+	editor.setOptions({
+		enableBasicAutocompletion: true,
+		//enableSnippets: true,
+		enableLiveAutocompletion: true
+	});
+
+	var schema_search = {
+		identifierRegexps: [/[a-zA-Z_0-9\.\$\-\u00A2-\uFFFF]/],
+		getCompletions: function(editor, session, pos, prefix, callback) {
+			const regex = /FROM "(.*?)"/gi;
+			m = regex.exec(editor.getValue());
+			table = m[1];
+			callback(null, schema[table].fields.filter(function(word)
+			{ return word.startsWith(prefix); }).map(function(word) {
+				return {
+					//caption: (word.includes('.') ? word.split('.')[1] : "foo"),
+					value: word,
+					score: (word.includes('.') ? 50 : 500),
+					meta: (word.includes('.') ? "table" : "database"),
+				};
+			}));
+
+		}
+	}
+	langTools.setCompleters([schema_search]);
 </script>
 <script>
-    document.querySelector("#execute").addEventListener("click", execute);
-    //document.querySelector("#set").addEventListener("click", setApiKey);
-    var ENDPOINT = "https://data.boston.gov/api/3/action/datastore_search_sql?sql=";
+	document.querySelector("#execute").addEventListener("click", execute);
+	//document.querySelector("#set").addEventListener("click", setApiKey);
+	var ENDPOINT = "https://data.boston.gov/api/3/action/datastore_search_sql?sql=";
 
-    function setApiKey() {
-        window.localStorage['secret'] = window.prompt('API Key')
-    }
+	function setApiKey() {
+		window.localStorage['secret'] = window.prompt('API Key')
+	}
 
-    function execute() {
-        if (document.querySelector("#results") !== null) {
-            document.body.removeChild(document.querySelector("#results"));
-        }
-        var oReq = new XMLHttpRequest();
-        oReq.addEventListener("load", reqListener);
-        oReq.addEventListener("error", transferFailed);
-        oReq.open("GET", ENDPOINT+rawurlencode(editor.getValue()));
-        //Not working
-        if("secret" in localStorage) {
-            oReq.setRequestHeader("Authorization",localStorage['secret']);
-        }
-        oReq.send();
-    }
+	function execute() {
+		if (document.querySelector("#results") !== null) {
+			document.body.removeChild(document.querySelector("#results"));
+		}
+		var oReq = new XMLHttpRequest();
+		oReq.addEventListener("load", reqListener);
+		oReq.addEventListener("error", transferFailed);
+		oReq.open("GET", ENDPOINT+rawurlencode(editor.getValue()));
+		//Not working
+		if("secret" in localStorage) {
+			oReq.setRequestHeader("Authorization",localStorage['secret']);
+		}
+		oReq.send();
+	}
 
-    /**
-     * Note: Without CORS this will happen
-     * @return void
-     */
-    function transferFailed() {
-        div = document.createElement("div");
-        div.setAttribute("id","results");
-        div.innerHTML = "Error: To troubleshoot open devtools or see help.";
-        document.body.appendChild(div);
-    }
+	/**
+	 * Note: Without CORS this will happen
+	 * @return void
+	 */
+	function transferFailed() {
+		div = document.createElement("div");
+		div.setAttribute("id","results");
+		div.innerHTML = "Error: To troubleshoot open devtools or see help.";
+		document.body.appendChild(div);
+	}
 
-    function reqListener() {
-        if (this.status == 500) {
-            results = {
-                "success": false,
-                "error": {
-                    "query": ["500 Error: often a \"Class 22 - Data Exception\" such as: invalid_character_value_for_cast or division_by_zero, etc.  More at https://www.postgresql.org/docs/10/static/errcodes-appendix.html"]
-                }
-            }
-        } else {
-            results = JSON.parse(this.responseText);    
-        }
+	function reqListener() {
+		if (this.status == 500) {
+			results = {
+				"success": false,
+				"error": {
+					"query": ["500 Error: often a \"Class 22 - Data Exception\" such as: invalid_character_value_for_cast or division_by_zero, etc.  More at https://www.postgresql.org/docs/10/static/errcodes-appendix.html"]
+				}
+			}
+		} else {
+			results = JSON.parse(this.responseText);    
+		}
 
-        if(results.success !== undefined && !results.success) {
-            div = document.createElement("div");
-            div.setAttribute("id","results");
-            div.innerHTML = results.error.query[0];
-            document.body.appendChild(div);
-            return true;
-        }
+		if(results.success !== undefined && !results.success) {
+			div = document.createElement("div");
+			div.setAttribute("id","results");
+			div.innerHTML = results.error.query[0];
+			document.body.appendChild(div);
+			return true;
+		}
 
-        table = document.createElement("table");
-        table.setAttribute("id","results");
-        html = "<thead><tr>";
-        for (var field of results.result.fields) {
-            html += "<th>"+field.id+"</th>";
-        }
-        html += "</thead></tr>";
-        for (var record of results.result.records) {
-            html += "<tr>";
-            for (var field of results.result.fields) {
-                html += "<td>"+record[field.id]+"</td>";
-            }
-            html += "</tr>";
-        }
-        table.innerHTML = html;
-        document.body.appendChild(table);
-    }
+		table = document.createElement("table");
+		table.setAttribute("id","results");
+		html = "<thead><tr>";
+		for (var field of results.result.fields) {
+			html += "<th>"+field.id+"</th>";
+		}
+		html += "</thead></tr>";
+		for (var record of results.result.records) {
+			html += "<tr>";
+			for (var field of results.result.fields) {
+				html += "<td>"+record[field.id]+"</td>";
+			}
+			html += "</tr>";
+		}
+		table.innerHTML = html;
+		document.body.appendChild(table);
+	}
 
-    function rawurlencode (str) {
-        str = (str+'').toString();        
-        return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A');
-    }
+	function rawurlencode (str) {
+		str = (str+'').toString();        
+		return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A');
+	}
 </script>
 </body>
 </html>
