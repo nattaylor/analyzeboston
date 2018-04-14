@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>SQL Client for data.boston.gov</title>
+<title>SQL Client for Analyze Boston - data.boston.gov</title>
 <style type="text/css" media="screen">
 	:root {
 		--editor-width:600px;
@@ -173,20 +173,7 @@ div.lightbox figure .closemsg, div.lightbox figure figcaption {
 <div id="header">
 	<a href="http://data.boston.gov"><img src="https://data.boston.gov/img/Analyze_Boston_logo.svg" style="height:20px;width:200px;vertical-align:middle;margin:2px;" border="0"></a> <span><strong>SQL Client</strong> by <a href="http://nattaylor.com" target="_blank">Nat Taylor</a></span> <span><a href="#help">Help</a></span>
 </div>
-<div id="editor">SELECT
-	TO_CHAR("ISSUED_DATE", 'YYYY') AS YEAR,
-	COUNT(*) PERMITS,
-	COUNT(DISTINCT "Parcel_ID") PROPERTIES,
-	SUM("DECLARED_VALUATION"::decimal) TOTAL_VALUE
-FROM "6ddcd912-32a0-43df-9908-63574f8c7e77"
-WHERE
-	"ZIP" = '02128'
-	AND "ADDRESS" NOT ILIKE '%%Harborside%%'
-	AND "ADDRESS" NOT ILIKE '%%Logan%%'
-	AND "ADDRESS" NOT ILIKE '%%Terminal%%'
-	AND "DECLARED_VALUATION"::decimal < 500000
-GROUP BY TO_CHAR("ISSUED_DATE", 'YYYY')
-ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
+<div id="editor"></div>
 <button id="execute">Run Query</button>
 <!-- <button id="set">Set</button> -->
 <div id="results"></div>
@@ -213,6 +200,7 @@ ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
 <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="src-noconflict/ext-language_tools.js"></script>
 <script src="schema.js"></script>
+<script src="queries.js"></script>
 <script>
 	var editor = ace.edit("editor");
 	editor.session.setMode("ace/mode/sql");
@@ -248,6 +236,7 @@ ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
 <script>
 	document.querySelector("#execute").addEventListener("click", execute);
 	//document.querySelector("#set").addEventListener("click", setApiKey);
+	editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
 	var ENDPOINT = "https://data.boston.gov/api/3/action/datastore_search_sql?sql=";
 
 	function setApiKey() {
