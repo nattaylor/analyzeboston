@@ -1,135 +1,3 @@
-<!--
-    http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
- - Scrape schema: `SELECT * FROM "" LIMIT 1;` response.result.fields ex {type: "text", id: "year"}
-    - default transforms (e.g. into decimals, etc)
-    - add typeahead
-    - https://data.boston.gov/api/3/action/package_list?limit=150 -> https://data.boston.gov/api/3/action/datastore_search?id=6ddcd912-32a0-43df-9908-63574f8c7e77&limit=0
-    - https://data.boston.gov/api/3/action/package_search?q=*:*&rows=150&
-    - transform hints: nullif('','')::decimal
- - Errors
-    - look at the response.success property
-    - display the error!
- - Download as CSV/TSV
- - Copy to clipboard
- - History
-    - show query history    
-{
-    "help": "https://data.boston.gov/api/3/action/help_show?name=datastore_search_sql",
-    "success": false,
-    "error": {
-        "info": {
-            "params": [{}],
-            "statement": ["SELECT\n    *\nFROM \"approved-building-permits\"\nLIMIT 1;"],
-            "orig": ["relation \"approved-building-permits\" does not exist\nLINE 3: FROM \"approved-building-permits\"\n             ^\n"]
-        },
-        "query": ["(ProgrammingError) relation \"approved-building-permits\" does not exist\nLINE 3: FROM \"approved-building-permits\"\n             ^\n 'SELECT\\n    *\\nFROM \"approved-building-permits\"\\nLIMIT 1;' {}"],
-        "__type": "Validation Error"
-    }
-}
-
-{
-    "help": "https://data.boston.gov/api/3/action/help_show?name=datastore_search_sql",
-    "success": true,
-    "result": {
-        "records": [{
-            "Parcel_ID": "2012032000",
-            "Comments": "Change connector link layout from attached enclosed walkway to partially enclose walkway with canopy.",
-            "Location": "(42.260750000, -71.149610000)",
-            "PermitNumber": "A100071",
-            "PermitTypeDescr": "Amendment to a Long Form",
-            "ISSUED_DATE": "2011-11-04T11:04:58",
-            "sq_feet": "170",
-            "TOTAL_FEES": "429.00",
-            "EXPIRATION_DATE": "2012-05-04 00:00:00",
-            "WORKTYPE": "COB",
-            "STATUS": "Open",
-            "ZIP": "02132",
-            "APPLICANT": "Renee Santeusanio",
-            "STATE": "MA",
-            "DECLARED_VALUATION": "40000.00",
-            "CITY": "West Roxbury",
-            "DESCRIPTION": "City of Boston",
-            "_full_text": "'-04':31,37 '-05':36 '-11':30 '-71.149610000':58 '00':38,39,40 '02132':54 '04':33 '11':32 '170':46 '17268':55 '175':47 '2011':29 '2012':35 '2012032000':56 '40000.00':27 '42.260750000':57 '429.00':28 '58':34 'a':5 'a100071':1 'amendment':3 'attached':16 'boston':10,44 'boundary':49 'canopy':24 'change':11 'city':8,42 'cob':2 'comm':45 'connector':12 'enclose':21 'enclosed':17 'form':7 'from':15 'layout':14 'link':13 'long':6 'ma':53 'of':9,43 'open':41 'partially':20 'rd':50 'renee':25 'roxbury':52 'santeusanio':26 'to':4,19 'w':48 'walkway':18,22 'west':51 'with':23",
-            "OCCUPANCYTYPE": "Comm",
-            "ADDRESS": "175  W Boundary RD",
-            "OWNER": "CITY OF BOSTON",
-            "_id": 1,
-            "Property_ID": "17268"
-        }],
-        "fields": [{
-            "type": "int4",
-            "id": "_id"
-        }, {
-            "type": "tsvector",
-            "id": "_full_text"
-        }, {
-            "type": "text",
-            "id": "PermitNumber"
-        }, {
-            "type": "text",
-            "id": "WORKTYPE"
-        }, {
-            "type": "text",
-            "id": "PermitTypeDescr"
-        }, {
-            "type": "text",
-            "id": "DESCRIPTION"
-        }, {
-            "type": "text",
-            "id": "Comments"
-        }, {
-            "type": "text",
-            "id": "APPLICANT"
-        }, {
-            "type": "text",
-            "id": "DECLARED_VALUATION"
-        }, {
-            "type": "text",
-            "id": "TOTAL_FEES"
-        }, {
-            "type": "timestamp",
-            "id": "ISSUED_DATE"
-        }, {
-            "type": "text",
-            "id": "EXPIRATION_DATE"
-        }, {
-            "type": "text",
-            "id": "STATUS"
-        }, {
-            "type": "text",
-            "id": "OWNER"
-        }, {
-            "type": "text",
-            "id": "OCCUPANCYTYPE"
-        }, {
-            "type": "text",
-            "id": "sq_feet"
-        }, {
-            "type": "text",
-            "id": "ADDRESS"
-        }, {
-            "type": "text",
-            "id": "CITY"
-        }, {
-            "type": "text",
-            "id": "STATE"
-        }, {
-            "type": "text",
-            "id": "ZIP"
-        }, {
-            "type": "text",
-            "id": "Property_ID"
-        }, {
-            "type": "text",
-            "id": "Parcel_ID"
-        }, {
-            "type": "text",
-            "id": "Location"
-        }],
-        "sql": "SELECT\n    *\nFROM \"6ddcd912-32a0-43df-9908-63574f8c7e77\"\nLIMIT 1;"
-    }
-}
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -331,6 +199,7 @@ ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
             <h2>Usage</h2>
             <p>A dataset like <a href="https://data.boston.gov/dataset/property-assessment">Property Assesment</a> has a resource key which can be found in the preview link, like <code>https://data.boston.gov/dataset/property-assessment/resource/fd351943-c2c6-4630-992d-3f895360febd</code> on which you can run SQL.  This tool uses the SQL endpoint (<a href="http://docs.ckan.org/en/latest/maintaining/datastore.html#ckanext.datastore.logic.action.datastore_search_sql">documentation</a>.)</p>
             <h2>Troubleshooting</h2>
+            <p><strong>To see error messages</strong> enable this extension <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">allow-control-allow-origin:*</a></p>
             <p>The tool uses CKAN DataStore, which is a thin layer on top of a PostgreSQL database, so the PostgreSQL docs are very helpful.  MySQL users may want to read <a href="https://wiki.postgresql.org/wiki/Things_to_find_out_about_when_moving_from_MySQL_to_PostgreSQL">Things to find out about when moving from MySQL to PostgreSQL</a>.  The tool will just say "error" when execute invalid SQL, because the DataStore extension does not give detailed error messages.  Common Problems Include: </p>
             <ul>
                 <li>A system identifiers (e.g field names, table names, etc) wasn't <strong>doublequoted</strong></li>
@@ -345,8 +214,6 @@ ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
 <script src="src-noconflict/ext-language_tools.js"></script>
 <script>
     var editor = ace.edit("editor");
-    
-    //editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/sql");
     editor.renderer.setScrollMargin(10, 10, 10, 10);
     
@@ -373,9 +240,6 @@ ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
     langTools.addCompleter(rhymeCompleter);
     */
 </script>
-<script src="jquery-3.3.1.slim.min.js"></script>
-<link rel="stylesheet" href="jquery.dataTables.min.css">
-<script src="jquery.dataTables.min.js"></script>
 <script>
     document.querySelector("#execute").addEventListener("click", execute);
     //document.querySelector("#set").addEventListener("click", setApiKey);
@@ -400,12 +264,37 @@ ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
         oReq.send();
     }
 
+    /**
+     * Note: Without CORS this will happen
+     * @return void
+     */
     function transferFailed() {
-        alert("Query Failed - Common problems include:\n*Unquoted field\n*Cast error")
+        div = document.createElement("div");
+        div.setAttribute("id","results");
+        div.innerHTML = "Error: To troubleshoot open devtools or see help.";
+        document.body.appendChild(div);
     }
 
     function reqListener() {
-        results = JSON.parse(this.responseText)
+        if (this.status == 500) {
+            results = {
+                "success": false,
+                "error": {
+                    "query": ["500 Error: often a \"Class 22 - Data Exception\" such as: invalid_character_value_for_cast or division_by_zero, etc.  More at https://www.postgresql.org/docs/10/static/errcodes-appendix.html"]
+                }
+            }
+        } else {
+            results = JSON.parse(this.responseText);    
+        }
+
+        if(results.success !== undefined && !results.success) {
+            div = document.createElement("div");
+            div.setAttribute("id","results");
+            div.innerHTML = results.error.query[0];
+            document.body.appendChild(div);
+            return true;
+        }
+
         table = document.createElement("table");
         table.setAttribute("id","results");
         html = "<thead><tr>";
@@ -422,9 +311,7 @@ ORDER BY TO_CHAR("ISSUED_DATE", 'YYYY') ASC;</div>
         }
         table.innerHTML = html;
         document.body.appendChild(table);
-        //jQuery("#results").DataTable();
     }
-
 
     function rawurlencode (str) {
         str = (str+'').toString();        
