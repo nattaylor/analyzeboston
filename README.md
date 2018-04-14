@@ -22,8 +22,8 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
  - ~Errors~
     - ~look at the response.success property~
     - ~display the error!~
- - Download as CSV/TSV
- - Copy to clipboard
+ - ~Download as CSV/TSV~
+ - ~Copy to clipboard~
  - History
     - show query history    
 

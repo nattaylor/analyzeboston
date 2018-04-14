@@ -194,8 +194,9 @@
 			<h2>Usage</h2>
 			<p>A dataset like <a href="https://data.boston.gov/dataset/property-assessment">Property Assesment</a> has a resource key which can be found in the preview link, like <code>https://data.boston.gov/dataset/property-assessment/resource/fd351943-c2c6-4630-992d-3f895360febd</code> on which you can run SQL.  This tool uses the SQL endpoint (<a href="http://docs.ckan.org/en/latest/maintaining/datastore.html#ckanext.datastore.logic.action.datastore_search_sql">documentation</a>.)</p>
 			<h2>Troubleshooting</h2>
-			<p><strong>To see error messages</strong> enable this extension <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">allow-control-allow-origin:*</a></p>
-			<p>The tool uses CKAN DataStore, which is a thin layer on top of a PostgreSQL database, so the PostgreSQL docs are very helpful.  MySQL users may want to read <a href="https://wiki.postgresql.org/wiki/Things_to_find_out_about_when_moving_from_MySQL_to_PostgreSQL">Things to find out about when moving from MySQL to PostgreSQL</a>.  The tool will just say "error" when execute invalid SQL, because the DataStore extension does not give detailed error messages.  Common Problems Include: </p>
+			<p><strong>To see error messages</strong> enable this extension <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">allow-control-allow-origin:*</a> otherwise you will just get generic errors.</p>
+			<p>The tool uses CKAN DataStore, which is a thin layer on top of a PostgreSQL database, so the PostgreSQL docs are very helpful.  MySQL users may want to read <a href="https://wiki.postgresql.org/wiki/Things_to_find_out_about_when_moving_from_MySQL_to_PostgreSQL">Things to find out about when moving from MySQL to PostgreSQL</a>.</p>
+			<p>Common Problems Include: </p>
 			<ul>
 				<li>A system identifiers (e.g field names, table names, etc) wasn't <strong>doublequoted</strong></li>
 				<li>A string wasn't <strong>single quoted</strong></li>
@@ -278,6 +279,7 @@
 	}
 
 	function reqListener() {
+
 		if (this.status == 500) {
 			//We build a results object since it is not provided by the endpoint
 			results = {
@@ -329,6 +331,7 @@
 		html+="<textarea id=\"results-ta\">"+tsv+"</textarea>"
 		table.innerHTML = html;
 		document.body.appendChild(table);
+
 	}
 
 	function rawurlencode (str) {
