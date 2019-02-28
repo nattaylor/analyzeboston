@@ -249,6 +249,7 @@
 	    map[e.keyCode] = e.type == 'keydown';
 	    if(map[13] && map[91]) {
 	    	document.querySelector("#execute").click();
+	    	map = {}
 	    }
 	}
 	document.querySelector("#execute").addEventListener("click", execute);

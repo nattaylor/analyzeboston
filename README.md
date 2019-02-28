@@ -13,16 +13,34 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
 
 ## TODO
 
- - Deeplinking
- - History
-    - show query history
- - Automated Testing
- - Configurable autocomplete
- - Convert to library/Class
- - Typeahead Improvements
-    - default transforms (e.g. into decimals, etc)   
-    - transform hints: nullif('','')::decimal
- - Contribute to AnalzeBoston and/or CKAN
+ - Examples
+    - Window query
+    - ~PIVOT via `FILTER()`~
+    - ~Permits~
+    - ~Crime~
+    - ~311~
+ - Features
+    - Proxy (only needed to handle 409s)
+    - Deeplinking (with query)
+    - History
+        - show query history
+        - Retrieve results
+    - Typeahead Improvements
+        - Human readable table names
+        - Configurable autocomplete?
+        - Show datatype
+        - default transforms (e.g. into decimals, etc)   
+        - transform hints: nullif('','')::decimal
+    - Resize & fullscreen panels
+    - Schema browser panel
+    - Editor Tabs
+    - Enable worksheet to have multiple queries
+ - Project
+    - Automated Testing
+    - Convert to library/Class
+    - Adopt a framework
+    - Build Script
+    - Contribute to AnalzeBoston and/or CKAN
  - ~Scrape schema: `SELECT * FROM "" LIMIT 1;` response.result.fields ex {type: "text", id: "year"}~
     - ~https://data.boston.gov/api/3/action/package_list?limit=150 -> https://data.boston.gov/api/3/action/datastore_search?id=6ddcd912-32a0-43df-9908-63574f8c7e77&limit=0~
     - ~https://data.boston.gov/api/3/action/package_search?q=*:*&rows=150&~
