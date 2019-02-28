@@ -243,6 +243,14 @@
 	langTools.setCompleters([schema_search]);
 </script>
 <script>
+	var map = {}; // You could also use an array
+	onkeydown = onkeyup = function(e){
+	    e = e || event; // to deal with IE
+	    map[e.keyCode] = e.type == 'keydown';
+	    if(map[13] && map[91]) {
+	    	document.querySelector("#execute").click();
+	    }
+	}
 	document.querySelector("#execute").addEventListener("click", execute);
 	//document.querySelector("#set").addEventListener("click", setApiKey);
 	editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
