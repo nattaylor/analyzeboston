@@ -1,0 +1,172 @@
+	:root {
+		--editor-width:600px;
+		--header-height:25px;
+	}
+
+	html {
+		font-family: sans-serif;
+	}
+	body {
+		margin: 0;
+	}
+	#header {
+		height: var(--header-height);
+		left: 0;
+		right: 0;
+		top: 0;
+	}
+
+	#editor { 
+		position: absolute;
+		top: var(--header-height);
+		bottom: 0;
+		left: 0;
+		width:var(--editor-width);
+	}
+
+	#execute {
+		position: absolute;
+		top: var(--header-height);
+		right: 0;
+		margin-right: calc(100% - var(--editor-width));
+		z-index: 2;
+		border-collapse: collapse;
+		border: 0;
+		border-bottom: 3px solid #288BE4;
+		padding:0;
+		text-transform: uppercase;
+		font-size: x-large;
+		font-weight: bold;
+	}
+
+	#set {
+		position: absolute;
+		top: var(--header-height);
+		right: 0;
+		margin-right: calc((100% - var(--editor-width)) + 60px);
+		z-index: 2;
+	}
+
+	#results {
+		position: absolute;
+		right:0;
+		top: var(--header-height);
+		bottom:0;
+		width:calc(100% - var(--editor-width));
+		border-collapse:collapse;
+	}
+
+	#results td {
+		border:1px solid #efefef;
+		padding:2px;
+	}
+
+	#results th {
+		text-transform: uppercase;
+		font-weight: normal;
+		text-align: left;
+		background-color: #efefef;
+		padding:2px;
+	}
+
+	#results tr:nth-child(even) {
+		background-color: #f9f7f7;
+	}
+
+	#results tr:hover {
+		background-color: #efefef;
+	}
+
+	#results tr:focus {
+		background-color: cyan;
+	}
+
+	div.lightbox {
+		display: none;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;z-index: 5;
+	}
+
+	#results-ta {
+		resize: none;
+		border-collapse: collapse;
+		border: 0;
+		height: 0;
+		width: 0;
+	}
+
+	div.lightbox:target {
+		display: table;
+	}
+
+	div.lightbox figure {
+		display: table-cell;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		vertical-align: middle;
+	}
+
+	div.lightbox figure figcaption {
+		display: block;
+		margin: auto;
+		padding: 8px;
+		background-color: white;
+		height: 75%;
+		position: relative;
+		overflow: auto;
+		border: 1px #000000 solid;
+		border-radius: 10px;
+		text-align: justify;
+		font-size: 14px;
+	}
+
+	div.lightbox figure .closemsg {
+		display: block;
+		margin: auto;
+		height: 0;
+		overflow: visible;
+		text-align: right;
+		z-index: 5001;
+		cursor: default;
+	}
+
+	div.lightbox figure .closemsg, div.lightbox figure figcaption {
+		width: 75%;
+	}
+
+	.closemsg::after {
+		content: "\00D7";
+		display: inline-block;
+		position: relative;
+		right: -20px;
+		top: -10px;
+		z-index: 5002;
+		color: #ffffff;
+		border: 1px #ffffff solid;
+		border-radius: 10px;
+		width: 20px;
+		height: 20px;
+		line-height: 18px;
+		text-align: center;
+		margin: 0;
+		background-color: #000000;
+		font-weight: bold;
+		cursor: pointer;
+	}
+
+	.closemsg::before {
+		content: "";
+		display: block;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #000000;
+		opacity: 0.85;
+	}
