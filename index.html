@@ -60,12 +60,12 @@
 			<h2>Example: Volume of 311 Reports Over Time</h2>
 			<p>You want to see the volume of 311 reports over time.  Craft a SQL query that counts the incidents grouped by year and run it.</p>
 			<pre><code>SELECT
-    TO_CHAR("open_dt"::timestamp, 'YYYY') AS YEAR,
-    COUNT(*) TOTAL_REPORTS,
-    COUNT(*)/MAX(CASE WHEN EXTRACT(YEAR FROM CURRENT_DATE) = EXTRACT(YEAR FROM "open_dt"::timestamp) THEN CURRENT_DATE-(EXTRACT(YEAR FROM CURRENT_DATE)||'-01-01')::date ELSE 365 END) DAILY_AVERAGE
+	TO_CHAR("open_dt"::timestamp, 'YYYY') AS YEAR,
+	COUNT(*) TOTAL_REPORTS,
+	COUNT(*)/MAX(CASE WHEN EXTRACT(YEAR FROM CURRENT_DATE) = EXTRACT(YEAR FROM "open_dt"::timestamp) THEN CURRENT_DATE-(EXTRACT(YEAR FROM CURRENT_DATE)||'-01-01')::date ELSE 365 END) DAILY_AVERAGE
 FROM "2968e2c0-d479-49ba-a884-4ef523ada3c0" REPORTS_311
 WHERE
-    "neighborhood_services_district" = '1'
+	"neighborhood_services_district" = '1'
 GROUP BY TO_CHAR("open_dt"::timestamp, 'YYYY')
 ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
 <table border="1"><thead><tr><th>year</th><th>total_reports</th><th>daily_average</th></tr></thead><tbody><tr><td>2011</td><td>2764</td><td>7</td></tr><tr><td>2012</td><td>7624</td><td>20</td></tr><tr><td>2013</td><td>8996</td><td>24</td></tr><tr><td>2014</td><td>9125</td><td>25</td></tr><tr><td>2015</td><td>11209</td><td>30</td></tr><tr><td>2016</td><td>10237</td><td>28</td></tr><tr><td>2017</td><td>12961</td><td>35</td></tr><tr><td>2018</td><td>14212</td><td>38</td></tr><tr><td>2019</td><td>2209</td><td>38</td></tr></tbody></table>

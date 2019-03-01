@@ -1,12 +1,12 @@
 
 	var map = {}; // You could also use an array
 	onkeydown = onkeyup = function(e){
-	    e = e || event; // to deal with IE
-	    map[e.keyCode] = e.type == 'keydown';
-	    if(map[13] && map[91]) {
-	    	document.querySelector("#execute").click();
-	    	map = {}
-	    }
+		e = e || event; // to deal with IE
+		map[e.keyCode] = e.type == 'keydown';
+		if(map[13] && map[91]) {
+			document.querySelector("#execute").click();
+			map = {}
+		}
 	}
 
 	renderSchemaBrowser();
@@ -88,12 +88,12 @@
 			var queryEnd;
 			for (let i = cursorPosition.row; i >=0 ; i--) {
 				if(editorRows[i].match(/;/) && editorRows[i].match(/;/).length >= 1) {
-			    	if(i == cursorPosition.row) {
-			    		queryEnd = i;
-			    		continue;
-			    	}
-			    	queryStart = i + 1;
-			    	break;
+					if(i == cursorPosition.row) {
+						queryEnd = i;
+						continue;
+					}
+					queryStart = i + 1;
+					break;
 				}
 			}
 			if(!queryEnd) {
@@ -162,7 +162,7 @@
 		html = "<thead><tr>";
 		headers = []
 		for (var field of results.result.fields) {
-			html += "<th>"+field.id+"</th>";
+			html += "<th title=\""+JSON.stringify(field).replace(/\"/g,"&quot;")+"\">"+field.id+"</th>";
 			headers.push(field.id);
 		}
 		csv="\""+headers.join("\",\"")+"\"\n";
@@ -199,7 +199,7 @@
 		queryHistory.push(results);
 		localStorage.setItem('queryHistory',JSON.stringify(queryHistory));
 		var event = new Event('itemInserted');
-  		document.dispatchEvent(event);
+		document.dispatchEvent(event);
 		return true;
 	}
 
@@ -241,8 +241,8 @@
 			row += "<td>" + currentValue.result.records.length + "</td>";
 			row += "";
 			row += "</tr>"
-  			return accumulator + row;
-  		},'');
+			return accumulator + row;
+		},'');
 		html += "</tbody>";
 		table.innerHTML = html;
 		document.querySelector("#history").appendChild(table);
