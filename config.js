@@ -1,0 +1,3 @@
+config = {
+	"queryHistorySize": 20
+}

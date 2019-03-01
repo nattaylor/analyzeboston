@@ -11,13 +11,14 @@
 <div id="editor"></div>
 <button id="execute">Run Query</button>
 <div id="results"></div>
+<div id="history"><h2>Query History</h2></div>
 <div class="lightbox" id="help">
 	<figure>
 		<a href="#" class="closemsg"></a>
 		<figcaption>
 			<h1>Welcome (Help)</h1>
 			<div><input type="checkbox" id="welcome" onclick="toggleWelcome()"><label for="welcome">Show Welcome on startup</label></div>
-			<p><strong>Analyze Boston</strong> at <a href="">data.boston.gov</a> is "is the City of Boston's open data hub" with over 134 datasets and this Analyze Boston SQL Client is a tool for executing queries and displaying the results.</p>
+			<p><strong>Analyze Boston</strong> at <a href="https://data.boston.gov/">data.boston.gov</a> is "is the City of Boston's open data hub" with over 134 datasets and this Analyze Boston SQL Client is a tool for executing queries and displaying the results.</p>
 			<p><strong>Analyze Boston SQL Client</strong> is a tool for building SQL queries to run against the Analyze Boston dataset.</p>
 			<h2>Usage</h2>
 			<p>"Simply" write a valid SQL statement and click the "Run Query" button to run the query and then display the results (or error) in the panel to the right.</p>
@@ -93,6 +94,7 @@ ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
 </div>
 <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="src-noconflict/ext-language_tools.js"></script>
+<script src="config.js"></script>
 <script src="schema.js"></script>
 <script src="queries.js"></script>
 <script>

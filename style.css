@@ -1,6 +1,7 @@
 	:root {
 		--editor-width:600px;
 		--header-height:25px;
+		--history-height:300px;
 	}
 
 	html {
@@ -19,7 +20,7 @@
 	#editor { 
 		position: absolute;
 		top: var(--header-height);
-		bottom: 0;
+		bottom: var(--history-height);
 		left: 0;
 		width:var(--editor-width);
 	}
@@ -53,7 +54,16 @@
 		top: var(--header-height);
 		bottom:0;
 		width:calc(100% - var(--editor-width));
+		bottom: var(--history-height);
 		border-collapse:collapse;
+	}
+
+	#history {
+		position: absolute;
+		height: var(--history-height);
+		bottom: 0;
+		left: 0;
+		right: 0;
 	}
 
 	#results td {
