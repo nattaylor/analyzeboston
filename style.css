@@ -29,7 +29,7 @@
 
 	#editor {
 		width: 100%;
-		height: calc(100% - 60px);
+		height: calc(100% - 72px);
 	}
 
 	#execute {
@@ -74,6 +74,7 @@
 		right: 0;
 		max-height: var(--history-height);
 		overflow: scroll;
+		border-top:1px solid #a7a7a7;
 	}
 
 	#results td {
@@ -248,4 +249,11 @@
 	.query-history-sql-text a {
 		color: #222;
 		font-size: smaller;
+	}
+
+	#download {
+		position: absolute;
+		top: 25px;
+		left: 230px;
+}
 	}

@@ -179,9 +179,11 @@
 			csv += "\""+fields.join("\",\"")+"\"\n";
 			tsv += fields.join("\t")+"\n";
 		}
+		html+="<div id=\"download\">Download: "
 		html+="<a href=\"data:text/csv;charset=utf-8,"+encodeURI(csv)+"\" target\"_blank\" download=\"results.csv\">CSV</a>&nbsp;";
 		html+="<a href=\"data:text/tsv;charset=utf-8,"+encodeURI(tsv)+"\" target\"_blank\" download=\"results.tsv\">TSV</a>&nbsp;";
 		html+="<a href=\"javascript:copyResults()\">COPY</a>"
+		html+="</div>"
 		html+="<textarea id=\"results-ta\">"+tsv+"</textarea>"
 		table.innerHTML = html;
 		document.querySelector("#results").appendChild(table);
