@@ -1,6 +1,6 @@
 	:root {
 		--editor-width:600px;
-		--header-height:25px;
+		--header-height:35px;
 		--history-height:300px;
 	}
 
@@ -15,9 +15,11 @@
 		left: 0;
 		right: 0;
 		top: 0;
+		background-color: #f5f5f5;
+    	border-bottom: 1px solid #a7a7a7;
 	}
 
-	#editor { 
+	#editor-wrapper { 
 		position: absolute;
 		top: var(--header-height);
 		bottom: var(--history-height);
@@ -25,19 +27,22 @@
 		width:var(--editor-width);
 	}
 
+	#editor {
+    	width: 100%;
+    	height: calc(100% - 60px);
+	}
+
 	#execute {
 		position: absolute;
-		top: var(--header-height);
-		right: 0;
-		margin-right: calc(100% - var(--editor-width));
+		top: 22px;
+    	left: 188px;
 		z-index: 2;
 		border-collapse: collapse;
 		border: 0;
-		border-bottom: 3px solid #288BE4;
-		padding:0;
-		text-transform: uppercase;
-		font-size: x-large;
-		font-weight: bold;
+		padding: 4px;
+    	font-weight: normal;
+    	background-color: #288BE4;
+    	color: white;
 	}
 
 	#set {
@@ -56,7 +61,9 @@
 		width:calc(100% - var(--editor-width));
 		bottom: var(--history-height);
 		border-collapse:collapse;
-		overflow: scroll;
+		overflow: auto;
+		padding-left: 1vw;
+    	box-sizing: border-box;
 	}
 
 	#history {
@@ -151,6 +158,12 @@
 		cursor: default;
 	}
 
+	.lightbox textarea {
+		box-sizing: border-box;
+	    width: 100%;
+		min-height: 80%;
+	}
+
 	.closemsg::after {
 		content: "\00D7";
 		display: inline-block;
@@ -197,4 +210,42 @@
 	    text-transform: uppercase;
 	    font-size: x-large;
 	    font-weight: bold;
+	}
+
+	#header-nav {
+    	position: absolute;
+    	right: 5px;
+    	top: 8px;
+	}
+
+	#header-nav a {
+		color:#7d7d7d;
+		text-decoration: none;
+		font-weight: bold;
+	}
+
+	#header-nav span {
+		margin-left:5px;
+	}
+
+	#history-table {
+		width:100%;
+		table-layout:fixed;
+	}
+
+	#history-table td {
+		 overflow: hidden;
+    	text-overflow: ellipsis;
+    	white-space: nowrap;
+	}
+
+	#logo {
+		position: relative;
+  		top: 50%;
+  		transform: translateY(-50%);
+	}
+
+	.query-history-sql-text a {
+		color: #222;
+		font-size: smaller;
 	}

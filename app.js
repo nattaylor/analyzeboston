@@ -215,7 +215,10 @@
 	}
 
 	function getResultSql(index) {
-		window.prompt('SQL',JSON.parse(localStorage.getItem('queryHistory'))[index].result.sql)
+		let sql = JSON.parse(localStorage.getItem('queryHistory'))[index].result.sql;
+		if(window.prompt('Set editor contents to the following SQL?', sql)) {
+			editor.setValue(sql);
+		}
 	}
 
 	function renderQueryHistory() {
@@ -226,14 +229,15 @@
 
 		var table = document.createElement("table");
 		table.setAttribute("id","history-table");
-		html = "<thead><tr><th>Index</th><th>SQL Text</th><th>Row Count</th></tr></thead>";
-		html += queryHistory.reduce(function(accumulator, currentValue, currentIndex, array) {
+		table.setAttribute("width","100%");
+		html = "<thead><tr><th width=\"20\">Index</th><th>SQL Text</th><th width=\"100\">Row Count</th></tr></thead>";
+		html += queryHistory.reverse().reduce(function(accumulator, currentValue, currentIndex, array) {
 			if(!currentValue.success) {
 				return accumulator;
 			}
-			var row = "<tr>";
-			row += "<td onclick=\"renderResultsTableWrapper("+currentIndex+")\">"+currentIndex+"</td>";
-			row += "<td>" + "<a href=\"javascript:getResultSql("+currentIndex+")\">"+currentValue.result.sql.slice(0,20)+"...</a>" + "</td>";
+			var row = "<tr onclick=\"renderResultsTableWrapper("+currentIndex+")\">";
+			row += "<td>"+currentIndex+"</td>";
+			row += "<td class=\"query-history-sql-text\">" + "<a href=\"javascript:getResultSql("+currentIndex+")\">"+currentValue.result.sql.slice(0,200)+"...</a>" + "</td>";
 			row += "<td>" + currentValue.result.records.length + "</td>";
 			row += "";
 			row += "</tr>"
@@ -267,12 +271,17 @@
 		let figure = document.createElement("figure");
 		html="<a href=\"#\" class=\"closemsg\"></a><figcaption>";
 		html += "<h1>Examples</h1>";
+		html += "<div><button onclick=\"insertExample()\">Set editor contents to selected query</button></div>";
 		html += "<textarea>" + queries.reduce(function(acc, cur) {
 			return acc + cur + ";\n\n"
 		},"") + "</textarea>";
 		html += "</figcaption>";
 		figure.innerHTML = html;
 		document.querySelector("#examples").appendChild(figure);
+	}
+
+	function insertExample() {
+		editor.setValue(window.getSelection().toString());
 	}
 
 	function handleEditorChange(e) {

@@ -6,15 +6,18 @@
 </head>
 <body>
 <div id="header">
-	<a href="http://data.boston.gov"><img src="https://data.boston.gov/img/Analyze_Boston_logo.svg" style="height:20px;width:200px;vertical-align:middle;margin:2px;" border="0"></a>
-	<span><strong>SQL Client</strong> by <a href="http://nattaylor.com" target="_blank">Nat Taylor</a></span>
-	<span><a href="#help">Help</a></span>
-	<span><a href="#schema-browser">Schema</a></span>
-	<span><a href="#examples">Examples</a></span>
-	<span><a href="#share">Share</a>
+	<div id="logo">
+		<a href="http://data.boston.gov"><img src="https://data.boston.gov/img/Analyze_Boston_logo.svg" style="height:20px;width:200px;vertical-align:middle;margin:2px;" border="0"></a>
+		<span><strong>SQL Client</strong> by <a href="http://nattaylor.com" target="_blank" style="text-decoration: none;color:black;">Nat Taylor</a></span>
+	</div>
+	<nav id="header-nav">
+		<span><a href="#help">Help</a></span>
+		<span><a href="#schema-browser">Schema</a></span>
+		<span><a href="#examples">Examples</a></span>
+		<span><a href="#share">Share</a></span>
+	</nav>
 </div>
-<div id="editor"></div>
-<button id="execute">Run Query</button>
+<div id="editor-wrapper"><h2 class="results-title">Query Editor</h2><button id="execute">Run Query</button><div id="editor"></div></div>
 <div id="results"><h2 class="results-title">Query Results</h2></div>
 <div id="history"><h2 class="query-history-title">Query History</h2></div>
 <div class="lightbox" id="examples"></div>
