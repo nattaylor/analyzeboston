@@ -12,35 +12,42 @@ Get the latest Ace editor `src-noconflict/` https://github.com/ajaxorg/ace-build
 http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
 
 ## TODO
-
+ - Welcome Screen
+    - ~Usage Instructions~
+    - Error Examples
  - Examples
     - Window query
+    - CTE
     - ~PIVOT via `FILTER()`~
     - ~Permits~
     - ~Crime~
     - ~311~
  - Features
+    - Trim semicolins
     - Proxy (only needed to handle 409s)
     - Deeplinking (with query)
     - History
         - show query history
         - Retrieve results
     - Typeahead Improvements
+        - BUG: Typehead broken without tablename
         - Human readable table names
-        - Configurable autocomplete?
-        - Show datatype
-        - default transforms (e.g. into decimals, etc)   
+        - Show datatype in typeahead
+        - default transforms (e.g. into decimals, 1) create table of fully qualified names and types 2) implement
         - transform hints: nullif('','')::decimal
+        - Configurable autocomplete?
     - Resize & fullscreen panels
     - Schema browser panel
     - Editor Tabs
     - Enable worksheet to have multiple queries
  - Project
+    - Add `console.log()`ing
+    - Separate scripts and CSS
     - Automated Testing
     - Convert to library/Class
     - Adopt a framework
     - Build Script
-    - Contribute to AnalzeBoston and/or CKAN
+    - Contribute to AnalzeBoston and/or CKAN (See: https://docs.ckan.org/en/latest/extensions/index.html)
  - ~Scrape schema: `SELECT * FROM "" LIMIT 1;` response.result.fields ex {type: "text", id: "year"}~
     - ~https://data.boston.gov/api/3/action/package_list?limit=150 -> https://data.boston.gov/api/3/action/datastore_search?id=6ddcd912-32a0-43df-9908-63574f8c7e77&limit=0~
     - ~https://data.boston.gov/api/3/action/package_search?q=*:*&rows=150&~
@@ -52,6 +59,8 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
  - ~Copy to clipboard~
 
 ## Examples
+
+`SELECT version(); --PostgreSQL 9.6.9 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 4.9.3, 64-bit`
 
 ```
 {

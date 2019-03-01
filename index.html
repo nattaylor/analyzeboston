@@ -183,25 +183,83 @@
 </div>
 <div id="editor"></div>
 <button id="execute">Run Query</button>
-<!-- <button id="set">Set</button> -->
 <div id="results"></div>
 <div class="lightbox" id="help">
 	<figure>
 		<a href="#" class="closemsg"></a>
 		<figcaption>
-			<h1>Help</h1>
+			<h1>Welcome (Help)</h1>
+			<div><input type="checkbox" id="welcome" onclick="toggleWelcome()"><label for="welcome">Show Welcome on startup</label></div>
 			<p><strong>Analyze Boston</strong> at <a href="">data.boston.gov</a> is "is the City of Boston's open data hub" with over 134 datasets and this Analyze Boston SQL Client is a tool for executing queries and displaying the results.</p>
+			<p><strong>Analyze Boston SQL Client</strong> is a tool for building SQL queries to run against the Analyze Boston dataset.</p>
 			<h2>Usage</h2>
-			<p>A dataset like <a href="https://data.boston.gov/dataset/property-assessment">Property Assesment</a> has a resource key which can be found in the preview link, like <code>https://data.boston.gov/dataset/property-assessment/resource/fd351943-c2c6-4630-992d-3f895360febd</code> on which you can run SQL.  This tool uses the SQL endpoint (<a href="http://docs.ckan.org/en/latest/maintaining/datastore.html#ckanext.datastore.logic.action.datastore_search_sql">documentation</a>.)</p>
+			<p>"Simply" write a valid SQL statement and click the "Run Query" button to run the query and then display the results (or error) in the panel to the right.</p>
+			<p>A common workflow is as follows:</p>
+			<ol>
+				<li>Go to <a href="https://data.boston.gov/dataset">https://data.boston.gov/dataset</a> and click on a dataset.</li>
+				<li>Click the "Preview" button and select the hash from the URL (e.g. "5bce8e71-5192-48c0-ab13-8faff8fef4d7" for https://data.boston.gov/dataset/cityscore/resource/5bce8e71-5192-48c0-ab13-8faff8fef4d7)</li>
+				<li>Enter the following query <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
+				<li>Click "Run Query"</li>
+				<li>You will see the results on the right.  You can use the column names to make further more interesting queries!</li>
+			</ol>
+			<p>This tool uses CKAN's SQL endpoint (<a href="http://docs.ckan.org/en/latest/maintaining/datastore.html#ckanext.datastore.logic.action.datastore_search_sql">documentation</a>.)</p>
+			<h2>Example: Volume of 311 Reports Over Time</h2>
+			<p>You want to see the volume of 311 reports over time.  Craft a SQL query that counts the incidents grouped by year and run it.</p>
+			<pre><code>SELECT
+    TO_CHAR("open_dt"::timestamp, 'YYYY') AS YEAR,
+    COUNT(*) TOTAL_REPORTS,
+    COUNT(*)/MAX(CASE WHEN EXTRACT(YEAR FROM CURRENT_DATE) = EXTRACT(YEAR FROM "open_dt"::timestamp) THEN CURRENT_DATE-(EXTRACT(YEAR FROM CURRENT_DATE)||'-01-01')::date ELSE 365 END) DAILY_AVERAGE
+FROM "2968e2c0-d479-49ba-a884-4ef523ada3c0" REPORTS_311
+WHERE
+    "neighborhood_services_district" = '1'
+GROUP BY TO_CHAR("open_dt"::timestamp, 'YYYY')
+ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
+<table border="1"><thead><tr><th>year</th><th>total_reports</th><th>daily_average</th></tr></thead><tbody><tr><td>2011</td><td>2764</td><td>7</td></tr><tr><td>2012</td><td>7624</td><td>20</td></tr><tr><td>2013</td><td>8996</td><td>24</td></tr><tr><td>2014</td><td>9125</td><td>25</td></tr><tr><td>2015</td><td>11209</td><td>30</td></tr><tr><td>2016</td><td>10237</td><td>28</td></tr><tr><td>2017</td><td>12961</td><td>35</td></tr><tr><td>2018</td><td>14212</td><td>38</td></tr><tr><td>2019</td><td>2209</td><td>38</td></tr></tbody></table>
 			<h2>Troubleshooting</h2>
 			<p><strong>To see error messages</strong> enable this extension <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">allow-control-allow-origin:*</a> otherwise you will just get generic errors.</p>
 			<p>The tool uses CKAN DataStore, which is a thin layer on top of a PostgreSQL database, so the PostgreSQL docs are very helpful.  MySQL users may want to read <a href="https://wiki.postgresql.org/wiki/Things_to_find_out_about_when_moving_from_MySQL_to_PostgreSQL">Things to find out about when moving from MySQL to PostgreSQL</a>.</p>
 			<p>Common Problems Include: </p>
 			<ul>
-				<li>A system identifiers (e.g field names, table names, etc) wasn't <strong>doublequoted</strong></li>
-				<li>A string wasn't <strong>single quoted</strong></li>
-				<li>A nonexistent field was referenced</li>
-				<li>A <code>::cast</code> failed</li>
+				<li>500 error
+					<div class="query-example-error">Error messages: <code>500 Error</code></div>
+					<ul>
+						<li><span class="query-example-invalid">INVALID</span> <code>SELECT 1/0::decimal</code></li>
+						<li><span class="query-example-valid">VALID</span> <code>SELECT (1/NULLIF(0,0))::decimal</code></li>
+					</ul>
+					<p>In this case, the API responds with a 500 code and no error message, but you can infer that it is a data except from this list (<a href="https://www.postgresql.org/docs/9.6/errcodes-appendix.html">https://www.postgresql.org/docs/9.6/errcodes-appendix.html</a>.)</p>
+					<p>In this example, you can clearly see we were dividing by zero.</p>
+				</li>
+				<li>A system identifiers (e.g field names, table names, etc) wasn't <strong>doublequoted</strong>
+					<p>All system identifiers need to be double quoted (every column and every table name)</p>
+					<div class="query-example-error">Error messages: <code></code></div>
+					<ul>
+						<li><span class="query-example-invalid">INVALID</span> <code>SELECT * FROM 5bce8e71-5192-48c0-ab13-8faff8fef4d7 LIMIT 1</code></li>
+						<li><span class="query-example-valid">VALID</span> <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
+					</ul>
+				</li>
+				<li>A string wasn't <strong>single quoted</strong>
+					<p>Any string needs to be single quoted</p>
+					<div class="query-example-error">Error messages: <code></code></div>
+					<ul>
+						<li><span class="query-example-invalid">INVALID</span> <code>SELECT * FROM 5bce8e71-5192-48c0-ab13-8faff8fef4d7 LIMIT 1</code></li>
+						<li><span class="query-example-valid">VALID</span> <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
+					</ul>
+				</li>
+				<li>A nonexistent (or wrong-case) field was referenced
+					<div class="query-example-error">Error messages: <code></code></div>
+					<ul>
+						<li><span class="query-example-invalid">INVALID</span> <code>SELECT * FROM 5bce8e71-5192-48c0-ab13-8faff8fef4d7 LIMIT 1</code></li>
+						<li><span class="query-example-valid">VALID</span> <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
+					</ul>
+				</li>
+				<li>A <code>::cast</code> failed
+					<p>This is indicated by a 500 error.  See above.</p>
+					<div class="query-example-error">Error messages: <code></code></div>
+					<ul>
+						<li><span class="query-example-invalid">INVALID</span> <code>SELECT * FROM 5bce8e71-5192-48c0-ab13-8faff8fef4d7 LIMIT 1</code></li>
+						<li><span class="query-example-valid">VALID</span> <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
+					</ul>
+				</li>
 			</ul>
 		</figcaption>
 	</figure>
@@ -243,6 +301,7 @@
 	langTools.setCompleters([schema_search]);
 </script>
 <script>
+	
 	var map = {}; // You could also use an array
 	onkeydown = onkeyup = function(e){
 	    e = e || event; // to deal with IE
@@ -253,13 +312,20 @@
 	    }
 	}
 	document.querySelector("#execute").addEventListener("click", execute);
-	//document.querySelector("#set").addEventListener("click", setApiKey);
 	editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
-	var ENDPOINT = "https://data.boston.gov/api/3/action/datastore_search_sql?sql=";
-
-	function setApiKey() {
-		window.localStorage['secret'] = window.prompt('API Key')
+	if(localStorage.getItem('showWelcome') === null) {
+		localStorage.setItem('showWelcome', 'show');
 	}
+	if(localStorage.getItem('showWelcome')=='show') {
+		document.location.hash='#help';
+		document.querySelector('#welcome').checked = true;
+	}
+
+	function toggleWelcome() {
+		localStorage.setItem('showWelcome', localStorage.getItem('showWelcome') == 'show' ? 'hide' : 'show');
+	}
+
+	var ENDPOINT = "https://data.boston.gov/api/3/action/datastore_search_sql?sql=";
 
 	function execute() {
 		if (document.querySelector("#results") !== null) {
@@ -269,10 +335,6 @@
 		oReq.addEventListener("load", reqListener);
 		oReq.addEventListener("error", transferFailed);
 		oReq.open("GET", ENDPOINT+rawurlencode(editor.getValue()));
-		//Not working
-		if("secret" in localStorage) {
-			oReq.setRequestHeader("Authorization",localStorage['secret']);
-		}
 		oReq.send();
 	}
 
@@ -283,7 +345,7 @@
 	function transferFailed() {
 		div = document.createElement("div");
 		div.setAttribute("id","results");
-		div.innerHTML = "Error: To troubleshoot open devtools or see help.";
+		div.innerHTML = "Error: To troubleshoot open devtools or see help.  Most commonely: missing &quot;, errant field name or similar";
 		document.body.appendChild(div);
 	}
 
