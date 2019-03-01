@@ -41,9 +41,53 @@
 		var oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", reqListener);
 		oReq.addEventListener("error", transferFailed);
-		oReq.open("GET", ENDPOINT+rawurlencode(editor.getValue()));
+		oReq.open("GET", ENDPOINT+rawurlencode(getCurrentQuery()));
 		oReq.send();
 	}
+
+	/**
+	 * Find the current query, based on cursor or selection
+	 *  - If there is a selection, just return it
+	 *  - If there is only 1 semicolin, return the whole thing (because it indicates 1 query)
+	 *  - If there are 2 or more
+	 *  	1. start from the cursor and walk back to previous (or start of editor)
+	 *  	2. if the current line has a semicolin, end here else walk forward
+	 * 
+	 * 
+	 * @return {[type]} [description]
+	 */
+	function getCurrentQuery() {
+		if(editor.getSelectedText().length>0) {
+			return editor.getSelectedText().trim(";").replace(";","");
+		} else if(!editor.getValue().match(/;/g) || editor.getValue().match(/;/g).length <= 1) {
+			return editor.getValue().trim(";").replace(";","");
+		} else {
+			var cursorPosition = editor.getCursorPosition();
+			var editorRows = editor.getValue().split("\n");
+			var queryStart;
+			var queryEnd;
+			for (let i = cursorPosition.row; i >=0 ; i--) {
+				if(editorRows[i].match(/;/) && editorRows[i].match(/;/).length >= 1) {
+			    	if(i == cursorPosition.row) {
+			    		queryEnd = i;
+			    		continue;
+			    	}
+			    	queryStart = i + 1;
+			    	break;
+				}
+			}
+			if(!queryEnd) {
+				for (let i = cursorPosition.row; i >=0 ; i++) {
+					if(editorRows[i].match(/;/) && editorRows[i].match(/;/).length >= 1) {
+						queryEnd = i;
+						break;
+					}
+				}
+			}
+			return editorRows.slice(queryStart, queryEnd+1).join("\n").trim().replace(";","");
+		}
+	}
+
 
 	function removeResultsTable(){
 		if (document.querySelector("#results-table") !== null) {
@@ -56,9 +100,9 @@
 	 */
 	function transferFailed() {
 		div = document.createElement("div");
-		div.setAttribute("id","results");
+		div.setAttribute("id","results-table");
 		div.innerHTML = "Error: To troubleshoot open devtools or see help.  Most commonely: missing &quot;, errant field name or similar";
-		document.body.appendChild(div);
+		document.querySelector("#results").appendChild(div);
 	}
 
 	function reqListener() {

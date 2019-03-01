@@ -23,7 +23,7 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
     - ~Crime~
     - ~311~
  - Features
-    - Trim semicolins
+    - ~Trim semicolins~
     - Proxy (only needed to handle 409s)
     - Deeplinking (with query)
     - Typeahead Improvements
@@ -36,7 +36,7 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
     - Resize & fullscreen panels
     - Schema browser panel
     - Editor Tabs
-    - Enable worksheet to have multiple queries
+    - ~Enable worksheet to have multiple queries~
  - Project
     - Add `console.log()`ing
     - Separate scripts and CSS
