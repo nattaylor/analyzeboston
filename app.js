@@ -9,6 +9,8 @@
 	    }
 	}
 
+	renderSchemaBrowser();
+
 	if(!localStorage.getItem('queryHistory')) {
 		localStorage.setItem('queryHistory',JSON.stringify([]));
 	} else {
@@ -219,5 +221,19 @@
 		html += "</tbody>";
 		table.innerHTML = html;
 		document.querySelector("#history").appendChild(table);
+	}
+
+	function renderSchemaBrowser() {
+		let html = "<h1>Schema Browser</h1>";
+		for(let table in schema) {
+			console.log(table)
+			let data = schema[table];
+			html += "<h2>" + data.title + "</h2>";
+			html += "<div><input type=\"text\" value=\""+table+"\"></div>"; 
+			html += "<ul>" + data.fields.reduce(function(accumulator, currentValue) {
+				return accumulator + "<li>" + currentValue + "</li>";
+			},'') + "</ul>";
+		}
+		document.querySelector("#schema-browser-content").innerHTML = html;
 	}
 
