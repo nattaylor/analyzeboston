@@ -14,12 +14,19 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
 ## TODO
 
     
-    - Error Examples
+ 
  - Examples
+    - Error Examples
     - Window query
     - CTE
+    - Polygon
+    - Rollup/Cube
  - Features
     - Proxy (only needed to handle 409s)
+    - Change Examples to dialog
+    - BUG: results for errors
+    - Add datatype to schema for browser and typeahead
+    - Filter results
     - Typeahead Improvements
         - BUG: Typehead broken without tablename
         - Human readable table names
@@ -27,15 +34,18 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
         - default transforms (e.g. into decimals, 1) create table of fully qualified names and types 2) implement
         - transform hints: nullif('','')::decimal
         - Configurable autocomplete? (I think this means search tables until one is set)
-    - Resize & fullscreen panels
+    - Layout
+        - Resize & fullscreen panels
+        - Improve colors and positioning
  - Project
+    - Improve Use of Config
     - Add DEBUG mode (with `console.log()`)
     - Separate scripts and CSS
     - Automated Testing
     - Convert to library/Class
     - Adopt a framework
     - Build Script
-    - Contribute to AnalzeBoston and/or CKAN (See: https://docs.ckan.org/en/latest/extensions/index.html)
+    - Contribute to AnalzeBoston and/or as CKAN extension (See: https://docs.ckan.org/en/latest/extensions/index.html)
  - Icebox
     - Editor Tabs (Do we really need this?)
  - ~History~
@@ -60,6 +70,7 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
  - ~Example: Crime~
  - ~Example: 311~
  - ~Deeplinking (with query)~
+ - ~Add Editor Saving~
 
 
 ## Examples

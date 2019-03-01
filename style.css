@@ -94,15 +94,6 @@
 		background-color: cyan;
 	}
 
-	div.lightbox {
-		display: none;
-		position: fixed;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;z-index: 5;
-	}
-
 	#results-ta {
 		resize: none;
 		border-collapse: collapse;
@@ -111,17 +102,29 @@
 		width: 0;
 	}
 
+	div.lightbox {
+		display: none;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 5;
+	}
+
 	div.lightbox:target {
-		display: table;
+		/*display: table;*/
+		display:block;
+		bottom: 0;
+		right:0;
 	}
 
 	div.lightbox figure {
-		display: table-cell;
-		margin: 0;
+		display: block;
 		padding: 0;
-		width: 100%;
-		height: 100%;
-		vertical-align: middle;
+		xwidth: 100%;
+		height: 80vh;
+		margin: 10vh;
 	}
 
 	div.lightbox figure figcaption {
@@ -146,10 +149,6 @@
 		text-align: right;
 		z-index: 5001;
 		cursor: default;
-	}
-
-	div.lightbox figure .closemsg, div.lightbox figure figcaption {
-		width: 75%;
 	}
 
 	.closemsg::after {

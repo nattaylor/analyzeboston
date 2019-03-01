@@ -1,4 +1,4 @@
-	
+
 	var map = {}; // You could also use an array
 	onkeydown = onkeyup = function(e){
 	    e = e || event; // to deal with IE
@@ -10,6 +10,7 @@
 	}
 
 	renderSchemaBrowser();
+	renderExamples();
 
 	window.addEventListener('hashchange', share, false);
 
@@ -22,10 +23,20 @@
 	document.addEventListener("itemInserted", renderQueryHistory, false);
 
 	document.querySelector("#execute").addEventListener("click", execute);
-	editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
+
+	editor.on("change",handleEditorChange);
+	
 	if(localStorage.getItem('showWelcome') === null) {
 		localStorage.setItem('showWelcome', 'show');
 	}
+
+	if(localStorage.getItem('editorValue') === null) {
+		localStorage.setItem('editorValue', '');
+		editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
+	} else {
+		editor.setValue(localStorage.getItem('editorValue'));
+	}
+
 	if(localStorage.getItem('showWelcome')=='show' && document.location.hash.startsWith('#share')) {
 		document.location.hash='#help';
 		document.querySelector('#welcome').checked = true;
@@ -250,4 +261,20 @@
 		if(document.location.hash == '#share') {
 			document.querySelector('#share-textarea').innerHTML = document.location.href + "?query=" + btoa(getCurrentQuery());
 		}
+	}
+
+	function renderExamples() {
+		let figure = document.createElement("figure");
+		html="<a href=\"#\" class=\"closemsg\"></a><figcaption>";
+		html += "<h1>Examples</h1>";
+		html += "<textarea>" + queries.reduce(function(acc, cur) {
+			return acc + cur + ";\n\n"
+		},"") + "</textarea>";
+		html += "</figcaption>";
+		figure.innerHTML = html;
+		document.querySelector("#examples").appendChild(figure);
+	}
+
+	function handleEditorChange(e) {
+		localStorage.setItem('editorValue',editor.getValue())
 	}
