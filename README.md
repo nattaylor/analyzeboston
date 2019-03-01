@@ -26,9 +26,6 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
     - Trim semicolins
     - Proxy (only needed to handle 409s)
     - Deeplinking (with query)
-    - History
-        - show query history
-        - Retrieve results
     - Typeahead Improvements
         - BUG: Typehead broken without tablename
         - Human readable table names
@@ -48,6 +45,9 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
     - Adopt a framework
     - Build Script
     - Contribute to AnalzeBoston and/or CKAN (See: https://docs.ckan.org/en/latest/extensions/index.html)
+ - ~History~
+    - ~show query history~
+    - ~Retrieve results~
  - ~Scrape schema: `SELECT * FROM "" LIMIT 1;` response.result.fields ex {type: "text", id: "year"}~
     - ~https://data.boston.gov/api/3/action/package_list?limit=150 -> https://data.boston.gov/api/3/action/datastore_search?id=6ddcd912-32a0-43df-9908-63574f8c7e77&limit=0~
     - ~https://data.boston.gov/api/3/action/package_search?q=*:*&rows=150&~

@@ -162,7 +162,7 @@
 
 		var table = document.createElement("table");
 		table.setAttribute("id","history-table");
-		html = "<thead><tr><th></th><th></th><th></th></tr></thead>";
+		html = "<thead><tr><th>Index</th><th>SQL Text</th><th>Row Count</th></tr></thead>";
 		html += queryHistory.reduce(function(accumulator, currentValue, currentIndex, array) {
 			var row = "<tr>";
 			row += "<td onclick=\"renderResultsTableWrapper("+currentIndex+")\">"+currentIndex+"</td>";

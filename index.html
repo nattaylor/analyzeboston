@@ -6,12 +6,12 @@
 </head>
 <body>
 <div id="header">
-	<a href="http://data.boston.gov"><img src="https://data.boston.gov/img/Analyze_Boston_logo.svg" style="height:20px;width:200px;vertical-align:middle;margin:2px;" border="0"></a> <span><strong>SQL Client</strong> by <a href="http://nattaylor.com" target="_blank">Nat Taylor</a></span> <span><a href="#help">Help</a></span>
+	<a href="http://data.boston.gov"><img src="https://data.boston.gov/img/Analyze_Boston_logo.svg" style="height:20px;width:200px;vertical-align:middle;margin:2px;" border="0"></a> <span><strong>SQL Client</strong> by <a href="http://nattaylor.com" target="_blank">Nat Taylor</a></span> <span><a href="#help">Help</a></span> <a href="javascript:(function(){editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1)})()">Examples</a>
 </div>
 <div id="editor"></div>
 <button id="execute">Run Query</button>
 <div id="results"></div>
-<div id="history"><h2>Query History</h2></div>
+<div id="history"><h2 class="query-history-title">Query History</h2></div>
 <div class="lightbox" id="help">
 	<figure>
 		<a href="#" class="closemsg"></a>
