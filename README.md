@@ -12,39 +12,32 @@ Get the latest Ace editor `src-noconflict/` https://github.com/ajaxorg/ace-build
 http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
 
 ## TODO
- - Welcome Screen
-    - ~Usage Instructions~
+
+    
     - Error Examples
  - Examples
     - Window query
     - CTE
-    - ~PIVOT via `FILTER()`~
-    - ~Permits~
-    - ~Crime~
-    - ~311~
  - Features
-    - ~Trim semicolins~
     - Proxy (only needed to handle 409s)
-    - Deeplinking (with query)
     - Typeahead Improvements
         - BUG: Typehead broken without tablename
         - Human readable table names
         - Show datatype in typeahead
         - default transforms (e.g. into decimals, 1) create table of fully qualified names and types 2) implement
         - transform hints: nullif('','')::decimal
-        - Configurable autocomplete?
+        - Configurable autocomplete? (I think this means search tables until one is set)
     - Resize & fullscreen panels
-    - Schema browser panel
-    - Editor Tabs
-    - ~Enable worksheet to have multiple queries~
  - Project
-    - Add `console.log()`ing
+    - Add DEBUG mode (with `console.log()`)
     - Separate scripts and CSS
     - Automated Testing
     - Convert to library/Class
     - Adopt a framework
     - Build Script
     - Contribute to AnalzeBoston and/or CKAN (See: https://docs.ckan.org/en/latest/extensions/index.html)
+ - Icebox
+    - Editor Tabs (Do we really need this?)
  - ~History~
     - ~show query history~
     - ~Retrieve results~
@@ -57,6 +50,17 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
     - ~display the error!~
  - ~Download as CSV/TSV~
  - ~Copy to clipboard~
+ - ~Schema browser panel~
+ - ~Enable worksheet to have multiple queries~
+ - ~Usage Instructions~
+ - ~Welcome Screen~
+ - ~Trim semicolins~
+ - ~Example: PIVOT via `FILTER()`~
+ - ~Example: Permits~
+ - ~Example: Crime~
+ - ~Example: 311~
+ - ~Deeplinking (with query)~
+
 
 ## Examples
 

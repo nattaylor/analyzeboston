@@ -10,7 +10,8 @@
 	<span><strong>SQL Client</strong> by <a href="http://nattaylor.com" target="_blank">Nat Taylor</a></span>
 	<span><a href="#help">Help</a></span>
 	<span><a href="#schema-browser">Schema</a></span>
-	<a href="javascript:(function(){editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1)})()">Examples</a>
+	<span><a href="javascript:(function(){editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1)})()">Examples</a></span>
+	<span><a href="#share">Share</a>
 </div>
 <div id="editor"></div>
 <button id="execute">Run Query</button>
@@ -20,6 +21,15 @@
 	<figure>
 		<a href="#" class="closemsg"></a>
 		<figcaption id="schema-browser-content">
+		</figcaption>
+	</figure>
+</div>
+<div class="lightbox" id="share">
+	<figure>
+		<a href="#" class="closemsg"></a>
+		<figcaption id="schema-browser-content">
+			<h1>Sharable Link</h1>
+			<textarea id="share-textarea"></textarea>
 		</figcaption>
 	</figure>
 </div>

@@ -11,6 +11,8 @@
 
 	renderSchemaBrowser();
 
+	window.addEventListener('hashchange', share, false);
+
 	if(!localStorage.getItem('queryHistory')) {
 		localStorage.setItem('queryHistory',JSON.stringify([]));
 	} else {
@@ -24,9 +26,14 @@
 	if(localStorage.getItem('showWelcome') === null) {
 		localStorage.setItem('showWelcome', 'show');
 	}
-	if(localStorage.getItem('showWelcome')=='show') {
+	if(localStorage.getItem('showWelcome')=='show' && document.location.hash.startsWith('#share')) {
 		document.location.hash='#help';
 		document.querySelector('#welcome').checked = true;
+	}
+
+	if(document.location.hash.startsWith('#share')) {
+		//TODO: Fix since there are lots of failure cases for this
+		editor.setValue(atob(document.location.hash.slice(13)));
 	}
 
 	function toggleWelcome() {
@@ -210,6 +217,9 @@
 		table.setAttribute("id","history-table");
 		html = "<thead><tr><th>Index</th><th>SQL Text</th><th>Row Count</th></tr></thead>";
 		html += queryHistory.reduce(function(accumulator, currentValue, currentIndex, array) {
+			if(!currentValue.success) {
+				return accumulator;
+			}
 			var row = "<tr>";
 			row += "<td onclick=\"renderResultsTableWrapper("+currentIndex+")\">"+currentIndex+"</td>";
 			row += "<td>" + "<a href=\"javascript:getResultSql("+currentIndex+")\">"+currentValue.result.sql.slice(0,20)+"...</a>" + "</td>";
@@ -226,7 +236,6 @@
 	function renderSchemaBrowser() {
 		let html = "<h1>Schema Browser</h1>";
 		for(let table in schema) {
-			console.log(table)
 			let data = schema[table];
 			html += "<h2>" + data.title + "</h2>";
 			html += "<div><input type=\"text\" value=\""+table+"\"></div>"; 
@@ -237,3 +246,8 @@
 		document.querySelector("#schema-browser-content").innerHTML = html;
 	}
 
+	function share() {
+		if(document.location.hash == '#share') {
+			document.querySelector('#share-textarea').innerHTML = document.location.href + "?query=" + btoa(getCurrentQuery());
+		}
+	}
