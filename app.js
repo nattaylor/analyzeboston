@@ -34,7 +34,7 @@
 		}
 
 		if(localStorage.getItem('showWelcome') === null) {
-			localStorage.setItem('showWelcome', 'show');
+			localStorage.setItem('showWelcome', 'true');
 		}
 
 		if(localStorage.getItem('editorValue') === null) {
@@ -44,7 +44,7 @@
 			editor.setValue(localStorage.getItem('editorValue'));
 		}
 
-		if(localStorage.getItem('showWelcome')=='show' && !document.location.hash.startsWith('#share')) {
+		if(localStorage.getItem('showWelcome')==='true' && !document.location.hash.startsWith('#share')) {
 			document.location.hash='#help';
 			document.querySelector('#welcome').checked = true;
 		}
@@ -63,7 +63,7 @@
 	}
 
 	function toggleWelcome() {
-		localStorage.setItem('showWelcome', localStorage.getItem('showWelcome') == 'show' ? 'hide' : 'show');
+		localStorage.setItem('showWelcome', localStorage.getItem('showWelcome') === 'true' ? 'false' : 'true');
 	}
 
 	function executeQuery() {
