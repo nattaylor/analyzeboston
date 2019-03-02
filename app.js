@@ -1,5 +1,13 @@
+/**
+ * SQL Client Application
+ *
+ * @author Nat Taylor <nattaylor@gmail.com>
+ *
+ * Note: messy abuses of global namespace.  Oops.
+ * 
+ */
 
-	var map = {}; // You could also use an array
+	var map = {};
 	onkeydown = onkeyup = function(e){
 		e = e || event; // to deal with IE
 		map[e.keyCode] = e.type == 'keydown';
@@ -17,6 +25,8 @@
 
 	renderSchemaBrowser();
 	renderExamples();
+	renderHelp();
+	setupAutocomplete();
 
 	window.addEventListener('hashchange', share, false);
 
@@ -43,7 +53,7 @@
 		editor.setValue(localStorage.getItem('editorValue'));
 	}
 
-	if(localStorage.getItem('showWelcome')=='show' && document.location.hash.startsWith('#share')) {
+	if(localStorage.getItem('showWelcome')=='show' && !document.location.hash.startsWith('#share')) {
 		document.location.hash='#help';
 		document.querySelector('#welcome').checked = true;
 	}
@@ -51,6 +61,7 @@
 	if(document.location.hash.startsWith('#share')) {
 		//TODO: Fix since there are lots of failure cases for this
 		editor.setValue(atob(document.location.hash.slice(13)));
+		document.location.hash = "";
 	}
 
 	function toggleWelcome() {
@@ -271,7 +282,7 @@
 	}
 
 	function share() {
-		if(document.location.hash == '#share') {
+		if(document.location.hash.startsWith('#share')) {
 			document.querySelector('#share-textarea').innerHTML = document.location.href + "?query=" + btoa(getCurrentQuery());
 		}
 	}
@@ -304,4 +315,50 @@
 				tr.style.display="none";
 			}
 		});
+	}
+
+	function renderHelp() {
+		document.querySelector("#help").innerHTML = help;
+	}
+
+	function setupAutocomplete() {
+		var schema_tables = Object.entries(schema).map(function(key) {return {"title": key[1].title, "id": key[0]}});
+		var schema_search = {
+			identifierRegexps: [/[a-zA-Z_0-9\.\$\-\u00A2-\uFFFF]/],
+			getCompletions: function(editor, session, pos, prefix, callback) {
+				//if (prefix.length === 0) { callback(null, []); return }
+				const regex = /FROM "(.+?)"/gi;
+				m = regex.exec(getCurrentQuery());
+				if(m && schema[m[1]]) {
+					table = m[1];
+					callback(null, schema[table].fields.filter(function(current_search){
+						return current_search.id.startsWith(prefix); }).map(function(current_search) {
+							return {
+								"caption": current_search.id,
+								"value": "\""+current_search.id+"\"::"+current_search.type,
+								"score": (current_search.id.includes('.') ? 50 : 500),
+								"meta": current_search.type,
+							};
+					}));
+				} else {
+					callback(null, schema_tables.filter(function(current_search){
+						return current_search.id.startsWith(prefix); }).map(function(current_search) {
+							return {
+								"caption": current_search.title,
+								"value": "\""+current_search.id+"\" "+current_search.title.toUpperCase().replace(/ /g,"_"),
+								"score": (current_search.id.includes('.') ? 50 : 500),
+								"meta": current_search.type,
+							};
+					}));
+				}
+
+			}
+		}
+		langTools.setCompleters([schema_search]);
+	}
+
+	function getStarted() {
+		document.location.hash = "";
+		editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
+		document.querySelector("#execute").click();
 	}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>SQL Client for Analyze Boston - data.boston.gov</title>
+<title>SQL Client for Analyze Boston by Nat Taylor</title>
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,9 +12,9 @@
 	</div>
 	<nav id="header-nav">
 		<span><a href="#help">Help</a></span>
-		<span><a href="#schema-browser">Schema</a></span>
+		<span><a href="#schema-browser">SchemaBrowser</a></span>
 		<span><a href="#examples">Examples</a></span>
-		<span><a href="#share">Share</a></span>
+		<span><a href="#share">Link</a></span>
 		<span><a href="#feedback">Feedback</a>
 	</nav>
 </div>
@@ -43,97 +43,21 @@
 		<a href="#" class="closemsg"></a>
 		<figcaption>
 			<h2>Feedback</h2>
-			<p>Contact <a href="mailto:nattaylor@gmail.com">Nat</a></p>
+			<h3>On The Application...</h3>
+			<p>Questions? Comments?  Bug Report?  Contact <a href="mailto:nattaylor@gmail.com">Nat</a>.</p>
+			<h3>On The Data...</h3>
+			<p>If you have feedback about the data head to <a href="http://data.boston.gov">data.boston.gov</a></p>
 		</figcaption>
 	</figure>
 </div>
 <div class="lightbox" id="help">
-	<figure>
-		<a href="#" class="closemsg"></a>
-		<figcaption>
-			<h1>Welcome (Help)</h1>
-			<div><input type="checkbox" id="welcome" onclick="toggleWelcome()"><label for="welcome">Show Welcome on startup</label></div>
-			<p><strong>Analyze Boston</strong> at <a href="https://data.boston.gov/">data.boston.gov</a> is "is the City of Boston's open data hub" with over 134 datasets and this Analyze Boston SQL Client is a tool for executing queries and displaying the results.</p>
-			<p><strong>Analyze Boston SQL Client</strong> is a tool for building SQL queries to run against the Analyze Boston dataset.</p>
-			<p>Note: this interface is largely inspired Snowflake Cloud Datawarehouse</p>
-			<h2>Usage</h2>
-			<p>"Simply" write a valid SQL statement and click the "Run Query" button to run the query and then display the results (or error) in the panel to the right.</p>
-			<p>Click "Schema Browser" to see the available data tables and column names</p>
-			<p>A common workflow is as follows:</p>
-			<ol>
-				<li>Go to <a href="https://data.boston.gov/dataset">https://data.boston.gov/dataset</a> and click on a dataset.</li>
-				<li>Click the "Preview" button and select the hash from the URL (e.g. "5bce8e71-5192-48c0-ab13-8faff8fef4d7" for https://data.boston.gov/dataset/cityscore/resource/5bce8e71-5192-48c0-ab13-8faff8fef4d7)</li>
-				<li>Enter the following query <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
-				<li>Click "Run Query"</li>
-				<li>You will see the results on the right.  You can use the column names to make further more interesting queries!</li>
-			</ol>
-			<p>This tool uses CKAN's SQL endpoint (<a href="http://docs.ckan.org/en/latest/maintaining/datastore.html#ckanext.datastore.logic.action.datastore_search_sql">documentation</a>.)</p>
-			<h2>Example: Volume of 311 Reports Over Time</h2>
-			<p>You want to see the volume of 311 reports over time.  Craft a SQL query that counts the incidents grouped by year and run it.</p>
-			<pre><code>SELECT
-	TO_CHAR("open_dt"::timestamp, 'YYYY') AS YEAR,
-	COUNT(*) TOTAL_REPORTS,
-	COUNT(*)/MAX(CASE WHEN EXTRACT(YEAR FROM CURRENT_DATE) = EXTRACT(YEAR FROM "open_dt"::timestamp) THEN CURRENT_DATE-(EXTRACT(YEAR FROM CURRENT_DATE)||'-01-01')::date ELSE 365 END) DAILY_AVERAGE
-FROM "2968e2c0-d479-49ba-a884-4ef523ada3c0" REPORTS_311
-WHERE
-	"neighborhood_services_district" = '1'
-GROUP BY TO_CHAR("open_dt"::timestamp, 'YYYY')
-ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
-<table border="1"><thead><tr><th>year</th><th>total_reports</th><th>daily_average</th></tr></thead><tbody><tr><td>2011</td><td>2764</td><td>7</td></tr><tr><td>2012</td><td>7624</td><td>20</td></tr><tr><td>2013</td><td>8996</td><td>24</td></tr><tr><td>2014</td><td>9125</td><td>25</td></tr><tr><td>2015</td><td>11209</td><td>30</td></tr><tr><td>2016</td><td>10237</td><td>28</td></tr><tr><td>2017</td><td>12961</td><td>35</td></tr><tr><td>2018</td><td>14212</td><td>38</td></tr><tr><td>2019</td><td>2209</td><td>38</td></tr></tbody></table>
-			<h2>Troubleshooting</h2>
-			<p><strong>To see error messages</strong> enable this extension <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">allow-control-allow-origin:*</a> otherwise you will just get generic errors.</p>
-			<p>The tool uses CKAN DataStore, which is a thin layer on top of a PostgreSQL database, so the PostgreSQL docs are very helpful.  MySQL users may want to read <a href="https://wiki.postgresql.org/wiki/Things_to_find_out_about_when_moving_from_MySQL_to_PostgreSQL">Things to find out about when moving from MySQL to PostgreSQL</a>.</p>
-			<p>Common Problems Include: </p>
-			<ul>
-				<li>500 error
-					<div class="query-example-error">Error messages: <code>500 Error</code></div>
-					<ul>
-						<li><span class="query-example-invalid">INVALID</span> <code>SELECT 1/0::decimal</code></li>
-						<li><span class="query-example-valid">VALID</span> <code>SELECT (1/NULLIF(0,0))::decimal</code></li>
-					</ul>
-					<p>In this case, the API responds with a 500 code and no error message, but you can infer that it is a data except from this list (<a href="https://www.postgresql.org/docs/9.6/errcodes-appendix.html">https://www.postgresql.org/docs/9.6/errcodes-appendix.html</a>.)</p>
-					<p>In this example, you can clearly see we were dividing by zero.</p>
-				</li>
-				<li>A system identifiers (e.g field names, table names, etc) wasn't <strong>doublequoted</strong>
-					<p>All system identifiers need to be double quoted (every column and every table name)</p>
-					<div class="query-example-error">Error messages: <code></code></div>
-					<ul>
-						<li><span class="query-example-invalid">INVALID</span> <code>SELECT * FROM 5bce8e71-5192-48c0-ab13-8faff8fef4d7 LIMIT 1</code></li>
-						<li><span class="query-example-valid">VALID</span> <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
-					</ul>
-				</li>
-				<li>A string wasn't <strong>single quoted</strong>
-					<p>Any string needs to be single quoted</p>
-					<div class="query-example-error">Error messages: <code></code></div>
-					<ul>
-						<li><span class="query-example-invalid">INVALID</span> <code>SELECT * FROM 5bce8e71-5192-48c0-ab13-8faff8fef4d7 LIMIT 1</code></li>
-						<li><span class="query-example-valid">VALID</span> <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
-					</ul>
-				</li>
-				<li>A nonexistent (or wrong-case) field was referenced
-					<div class="query-example-error">Error messages: <code></code></div>
-					<ul>
-						<li><span class="query-example-invalid">INVALID</span> <code>SELECT * FROM 5bce8e71-5192-48c0-ab13-8faff8fef4d7 LIMIT 1</code></li>
-						<li><span class="query-example-valid">VALID</span> <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
-					</ul>
-				</li>
-				<li>A <code>::cast</code> failed
-					<p>This is indicated by a 500 error.  See above.</p>
-					<div class="query-example-error">Error messages: <code></code></div>
-					<ul>
-						<li><span class="query-example-invalid">INVALID</span> <code>SELECT * FROM 5bce8e71-5192-48c0-ab13-8faff8fef4d7 LIMIT 1</code></li>
-						<li><span class="query-example-valid">VALID</span> <code>SELECT * FROM "5bce8e71-5192-48c0-ab13-8faff8fef4d7" LIMIT 1</code></li>
-					</ul>
-				</li>
-			</ul>
-		</figcaption>
-	</figure>
 </div>
 <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="src-noconflict/ext-language_tools.js"></script>
 <script src="config.js"></script>
 <script src="schema.js"></script>
 <script src="queries.js"></script>
+<script src="help.js"></script>
 <script>
 	var editor = ace.edit("editor");
 	editor.session.setMode("ace/mode/sql");
@@ -145,40 +69,6 @@ ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
 		//enableSnippets: true,
 		enableLiveAutocompletion: true
 	});
-
-	var schema_tables = Object.entries(schema).map(function(key) {return {"title": key[1].title, "id": key[0]}});
-	var schema_search = {
-		identifierRegexps: [/[a-zA-Z_0-9\.\$\-\u00A2-\uFFFF]/],
-		getCompletions: function(editor, session, pos, prefix, callback) {
-			//if (prefix.length === 0) { callback(null, []); return }
-			const regex = /FROM "(.+?)"/gi;
-			m = regex.exec(getCurrentQuery());
-			if(m && schema[m[1]]) {
-				table = m[1];
-				callback(null, schema[table].fields.filter(function(current_search){
-					return current_search.id.startsWith(prefix); }).map(function(current_search) {
-						return {
-							"caption": current_search.id,
-							"value": "\""+current_search.id+"\"::"+current_search.type,
-							"score": (current_search.id.includes('.') ? 50 : 500),
-							"meta": current_search.type,
-						};
-				}));
-			} else {
-				callback(null, schema_tables.filter(function(current_search){
-					return current_search.id.startsWith(prefix); }).map(function(current_search) {
-						return {
-							"caption": current_search.title,
-							"value": "\""+current_search.id+"\" "+current_search.title.toUpperCase().replace(/ /g,"_"),
-							"score": (current_search.id.includes('.') ? 50 : 500),
-							"meta": current_search.type,
-						};
-				}));
-			}
-
-		}
-	}
-	langTools.setCompleters([schema_search]);
 </script>
 <script src="app.js"></script>
 </body>
