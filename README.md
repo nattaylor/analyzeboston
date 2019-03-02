@@ -4,7 +4,13 @@ Edit and execute SQL queries in the browser using the CKAN DataStore API on the 
 
 ## Installation
 
-Get the latest Ace editor `src-noconflict/` https://github.com/ajaxorg/ace-builds/ 
+Get the latest Ace editor and store it in `src-noconflict/` https://github.com/ajaxorg/ace-builds/ 
+
+## Developer Guide
+
+This is a half-baked single page app currently that uses no framework and just clumsily does everything in the global space.
+
+
 
 
 ## DataStore API Docs
@@ -17,19 +23,15 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
     - Error Examples
     - Window query
     - CTE
-    - Polygon
     - Rollup/Cube
  - Features
-    - Proxy (only needed to handle 409s)
     - Typeahead Improvements: 
         - default transforms (e.g. into decimals, 1) create table of fully qualified names and types 2) implement
         - transform hints: nullif('','')::decimal
     - Layout
         - Resize & fullscreen panels
+    - Link to metadata about a dataset
  - Project
-    - Improve Use of Config
-    - Add DEBUG mode (with `console.log()`)
-    - Separate scripts and CSS
     - Automated Testing
     - Convert to library/Class
     - Adopt a framework
@@ -38,6 +40,11 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
  - Icebox
     - Editor Tabs (Do we really need this?)
     - BUG: results for errors (What value?)
+ - ~Improve Use of Config~   
+ - ~Proxy (only needed to handle 409s)~
+ - ~Separate scripts and CSS~
+ - ~Add DEBUG mode (with `console.log()`)~   
+ - ~Example: Polygon~
  - ~Filter results~
  - ~Layout: Improve colors and positioning~   
  - ~Add datatype to schema for browser and typeahead~

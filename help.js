@@ -9,7 +9,7 @@ var help = 	`<figure>
 			<p>Note: this interface is largely inspired Snowflake Cloud Datawarehouse</p>
 			<h2>User Guide</h2>
 			<h3>Query Editor</h3>
-			<p>"Simply" 😀 write a valid SQL statement and click the "Run Query" button to run the query and then display the results (or error) in the panel to the right.</p>
+			<p>"Simply" write a valid SQL statement and click the "Run Query" button to run the query and then display the results (or error) in the panel to the right.</p>
 			<p>Your worksheet may contain multiple queries.  Your cursor position within the editor controls which query is executed.  If you have an editor selection, then the selection will be executed.</p>
 			<p>Use <code>ctrl + space</code> at any time to bring up the autocomplete menu.</p>
 			<p>Use <code>command + Enter</code> to submit the current query.</p>

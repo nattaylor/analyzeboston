@@ -49,5 +49,10 @@ FROM "2968e2c0-d479-49ba-a884-4ef523ada3c0" REPORTS_311
 WHERE
     "neighborhood_services_district" = '1'
 GROUP BY TO_CHAR("open_dt"::timestamp, 'YYYY')
-ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC`
+ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC`,
+`SELECT
+    point("lat"::decimal,"long"::decimal) <@ circle '((42.370024,-71.0355957),0.01)' within1km
+FROM "12cb3883-56f5-47de-afa5-3b1cf61b257b" CRIME_INCIDENT_REPORTS
+WHERE "district"::text = 'A7' and "location"::text != '(0.00000000, 0.00000000)'
+LIMIT 100`
 ]

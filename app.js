@@ -7,78 +7,74 @@
  * 
  */
 
-	var map = {};
-	onkeydown = onkeyup = function(e){
-		e = e || event; // to deal with IE
-		map[e.keyCode] = e.type == 'keydown';
-		if(map[13] && map[91]) {
-			document.querySelector("#execute").click();
-			map = {}
-		} else if (map[27]) {
-			document.location.hash = "#";
-		}/*else if (map[16] && map[191]) {
-			console.log(document.hasFocus())
-			document.location.hash = "help";
-			map = {}
-		} */
-	}
 
+
+	//Setup the UI
 	renderSchemaBrowser();
 	renderExamples();
 	renderHelp();
+	renderQueryHistory();
 	setupAutocomplete();
+	setupKeyboardShortcuts();
+	setupStorageAndCheckHashes();
 
-	window.addEventListener('hashchange', share, false);
-
-	if(!localStorage.getItem('queryHistory')) {
-		localStorage.setItem('queryHistory',JSON.stringify([]));
-	} else {
-		renderQueryHistory();
-	}
-
+	//Setup Event Listeners
+	window.addEventListener('hashchange', renderShare, false);
 	document.addEventListener("itemInserted", renderQueryHistory, false);
-
-	document.querySelector("#execute").addEventListener("click", execute);
-
+	document.querySelector("#execute").addEventListener("click", executeQuery);
 	editor.on("change",handleEditorChange);
+
 	
-	if(localStorage.getItem('showWelcome') === null) {
-		localStorage.setItem('showWelcome', 'show');
-	}
+	function setupStorageAndCheckHashes() {
+		if(!localStorage.getItem('proxy')) {
+			localStorage.setItem('proxy',true);
+		}
+		if(localStorage.getItem('proxy') === 'true') {
+			config.datastore_search_sql = document.location.origin+document.location.pathname+"query-proxy.php?sql=";
+		}
 
-	if(localStorage.getItem('editorValue') === null) {
-		localStorage.setItem('editorValue', '');
-		editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
-	} else {
-		editor.setValue(localStorage.getItem('editorValue'));
-	}
+		if(localStorage.getItem('showWelcome') === null) {
+			localStorage.setItem('showWelcome', 'show');
+		}
 
-	if(localStorage.getItem('showWelcome')=='show' && !document.location.hash.startsWith('#share')) {
-		document.location.hash='#help';
-		document.querySelector('#welcome').checked = true;
-	}
+		if(localStorage.getItem('editorValue') === null) {
+			localStorage.setItem('editorValue', '');
+			editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
+		} else {
+			editor.setValue(localStorage.getItem('editorValue'));
+		}
 
-	if(document.location.hash.startsWith('#share')) {
-		//TODO: Fix since there are lots of failure cases for this
-		editor.setValue(atob(document.location.hash.slice(13)));
-		document.location.hash = "";
+		if(localStorage.getItem('showWelcome')=='show' && !document.location.hash.startsWith('#share')) {
+			document.location.hash='#help';
+			document.querySelector('#welcome').checked = true;
+		}
+
+		if(document.location.hash.startsWith('#share')) {
+			//TODO: Fix since there are lots of failure cases for this
+			editor.setValue(atob(document.location.hash.slice(13)));
+			document.location.hash = "";
+		}
+
+		if(document.location.hash.includes('?debug=true')) {
+			localStorage.setItem('debug',true);
+		} else if (document.location.hash.includes('?debug=false') || localStorage.getItem('debug') === null) {
+			localStorage.setItem('debug',false);
+		}
 	}
 
 	function toggleWelcome() {
 		localStorage.setItem('showWelcome', localStorage.getItem('showWelcome') == 'show' ? 'hide' : 'show');
 	}
 
-	var ENDPOINT = "https://data.boston.gov/api/3/action/datastore_search_sql?sql=";
-
-	function execute() {
+	function executeQuery() {
 		removeResultsTable();
 		if (document.querySelector("#results-table") !== null) {
 			document.querySelector("#results-table").parentNode.removeChild(document.querySelector("#results-table"));
 		}
 		var oReq = new XMLHttpRequest();
-		oReq.addEventListener("load", reqListener);
-		oReq.addEventListener("error", transferFailed);
-		oReq.open("GET", ENDPOINT+rawurlencode(getCurrentQuery()));
+		oReq.addEventListener("load", queryExecutionListener);
+		oReq.addEventListener("error", queryExecutionFailure);
+		oReq.open("GET", config.datastore_search_sql+rawurlencode(getCurrentQuery()));
 		oReq.send();
 	}
 
@@ -135,41 +131,38 @@
 	 * Note: Without CORS this will happen
 	 * @return void
 	 */
-	function transferFailed() {
+	function queryExecutionFailure() {
 		div = document.createElement("div");
 		div.setAttribute("id","results-table");
 		div.innerHTML = "Error: To troubleshoot open devtools or see help.  Most commonely: missing &quot;, errant field name or similar";
 		document.querySelector("#results").appendChild(div);
 	}
 
-	function reqListener() {
+	function queryExecutionListener() {
 
+		//Build results if not provided by endpoint
 		if (this.status == 500) {
-			//We build a results object since it is not provided by the endpoint
-			results = {
-				"success": false,
-				"error": {
-					"query": ["500 Error: often a \"Class 22 - Data Exception\" which occurs after the query begins executing such as: invalid_character_value_for_cast or division_by_zero, etc.  More at https://www.postgresql.org/docs/10/static/errcodes-appendix.html"]
-				}
-			}
+			results = {"success": false, "error": { "query": ["(500ErrorFromException) Exception occurred during query execution after successful query parsing."] } }
 		} else {
 			results = JSON.parse(this.responseText);    
 		}
 
-		queryHistoryAdd(results);
-
-		if(typeof results.success !== 'undefined' && !results.success) {
-			div = document.createElement("div");
-			div.setAttribute("id","results-table");
-			const error_regex = /([^\^]*)\^/
-			error_extract = error_regex.exec(results.error.query[0]);
-			error_msg = (error_extract !== null && error_extract.hasOwnProperty(1)) ? error_extract[1] : results.error.query[0]
-			div.innerHTML = error_msg;
-			document.querySelector("#results").appendChild(div);
-			return true;
+		if(results.success === true) {
+			renderResultsTable(results);
+		} else if (results.success === false) {
+			renderError(results);
+		} else {
+			
 		}
 
-		renderResultsTable(results);
+		queryHistoryAdd(results);
+	}
+
+	function renderError(results) {
+		div = document.createElement("div");
+		div.setAttribute("id","results-table");
+		div.innerHTML = "<pre>"+results.error.query[0]+"</pre>";
+		document.querySelector("#results").appendChild(div);
 	}
 
 	function renderResultsTable(results) {
@@ -223,8 +216,9 @@
 		return true;
 	}
 
+	/** Encodes additional characters as required by the datastore_search_sql API */
 	function rawurlencode (str) {
-		str = (str+'').toString();        
+		str = (str+'').toString();
 		return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A');
 	}
 
@@ -234,7 +228,7 @@
 		document.execCommand('copy');
 	}
 
-	function getResultSql(index) {
+	function promptResultSql(index) {
 		let sql = JSON.parse(localStorage.getItem('queryHistory'))[index].result.sql;
 		if(window.prompt('Set editor contents to the following SQL?', sql)) {
 			editor.setValue(sql);
@@ -242,6 +236,9 @@
 	}
 
 	function renderQueryHistory() {
+		if(!localStorage.getItem('queryHistory')) {
+			localStorage.setItem('queryHistory',JSON.stringify([]));
+		}
 		if (document.querySelector("#history-table") !== null) {
 			document.querySelector("#history-table").parentNode.removeChild(document.querySelector("#history-table"));
 		}
@@ -257,7 +254,7 @@
 			}
 			var row = "<tr onclick=\"renderResultsTableWrapper("+currentIndex+")\">";
 			row += "<td>"+currentIndex+"</td>";
-			row += "<td class=\"query-history-sql-text\">" + "<a href=\"javascript:getResultSql("+currentIndex+")\">"+currentValue.result.sql.slice(0,200)+"...</a>" + "</td>";
+			row += "<td class=\"query-history-sql-text\">" + "<a href=\"javascript:promptResultSql("+currentIndex+")\">"+currentValue.result.sql.slice(0,200)+"...</a>" + "</td>";
 			row += "<td>" + currentValue.result.records.length + "</td>";
 			row += "";
 			row += "</tr>"
@@ -281,7 +278,7 @@
 		document.querySelector("#schema-browser-content").innerHTML = html;
 	}
 
-	function share() {
+	function renderShare() {
 		if(document.location.hash.startsWith('#share')) {
 			document.querySelector('#share-textarea').innerHTML = document.location.href + "?query=" + btoa(getCurrentQuery());
 		}
@@ -291,7 +288,7 @@
 		let figure = document.createElement("figure");
 		html="<a href=\"#\" class=\"closemsg\"></a><figcaption>";
 		html += "<h1>Examples</h1>";
-		html += "<div><button onclick=\"insertExample()\">Set editor contents to selected query</button></div>";
+		html += "<div><button onclick=\"insertSelectionIntoEditor()\">Set editor contents to selected query</button></div>";
 		html += "<textarea>" + queries.reduce(function(acc, cur) {
 			return acc + cur + ";\n\n"
 		},"") + "</textarea>";
@@ -300,7 +297,7 @@
 		document.querySelector("#examples").appendChild(figure);
 	}
 
-	function insertExample() {
+	function insertSelectionIntoEditor() {
 		editor.setValue(window.getSelection().toString());
 	}
 
@@ -327,12 +324,12 @@
 			identifierRegexps: [/[a-zA-Z_0-9\.\$\-\u00A2-\uFFFF]/],
 			getCompletions: function(editor, session, pos, prefix, callback) {
 				//if (prefix.length === 0) { callback(null, []); return }
-				const regex = /FROM "(.+?)"/gi;
+				const regex = /FROM "([a-z0-9\-]+)"/gi;
 				m = regex.exec(getCurrentQuery());
 				if(m && schema[m[1]]) {
 					table = m[1];
 					callback(null, schema[table].fields.filter(function(current_search){
-						return current_search.id.startsWith(prefix); }).map(function(current_search) {
+						return current_search.id.includes(prefix); }).map(function(current_search) {
 							return {
 								"caption": current_search.id,
 								"value": "\""+current_search.id+"\"::"+current_search.type,
@@ -342,7 +339,7 @@
 					}));
 				} else {
 					callback(null, schema_tables.filter(function(current_search){
-						return current_search.id.startsWith(prefix); }).map(function(current_search) {
+						return current_search.id.includes(prefix); }).map(function(current_search) {
 							return {
 								"caption": current_search.title,
 								"value": "\""+current_search.id+"\" "+current_search.title.toUpperCase().replace(/ /g,"_"),
@@ -361,4 +358,36 @@
 		document.location.hash = "";
 		editor.setValue(queries[Math.floor(Math.random()*queries.length)], 1);
 		document.querySelector("#execute").click();
+	}
+
+	function log(entries) {
+		if(localStorage.getItem('debug') === "true") {
+			entries.forEach(function(entry) {
+				if(typeof entry === 'object') {
+					console.group(entry.label);
+					entry.logs.forEach(log => console.log(log))
+					console.groupEnd();
+				} else {
+					console.log(entry);
+				}
+			});
+		}
+	}
+
+	function setupKeyboardShortcuts() {
+		var map = {};
+		onkeydown = onkeyup = function(e){
+			e = e || event; // to deal with IE
+			map[e.keyCode] = e.type == 'keydown';
+			if(map[13] && map[91]) {
+				document.querySelector("#execute").click();
+				map = {}
+			} else if (map[27]) {
+				document.location.hash = "#";
+			}/*else if (map[16] && map[191]) {
+				console.log(document.hasFocus())
+				document.location.hash = "help";
+				map = {}
+			} */
+		}
 	}
