@@ -149,13 +149,12 @@
 
 		if(results.success === true) {
 			renderResultsTable(results);
+			queryHistoryAdd(results);
 		} else if (results.success === false) {
 			renderError(results);
 		} else {
 			
 		}
-
-		queryHistoryAdd(results);
 	}
 
 	function renderError(results) {
@@ -207,7 +206,7 @@
 	function queryHistoryAdd(results) {
 		var queryHistory = JSON.parse(localStorage.getItem("queryHistory"));
 		if(queryHistory.length >= config.queryHistorySize) {
-			queryHistory.pop();
+			queryHistory.shift();
 		}
 		queryHistory.push(results);
 		localStorage.setItem('queryHistory',JSON.stringify(queryHistory));
@@ -248,7 +247,7 @@
 		table.setAttribute("id","history-table");
 		table.setAttribute("width","100%");
 		html = "<thead><tr><th width=\"20\">Index</th><th>SQL Text</th><th width=\"100\">Row Count</th></tr></thead>";
-		html += queryHistory.reverse().reduce(function(accumulator, currentValue, currentIndex, array) {
+		html += queryHistory.reduce(function(accumulator, currentValue, currentIndex, array) {
 			if(!currentValue.success) {
 				return accumulator;
 			}
@@ -329,7 +328,7 @@
 				if(m && schema[m[1]]) {
 					table = m[1];
 					callback(null, schema[table].fields.filter(function(current_search){
-						return current_search.id.includes(prefix); }).map(function(current_search) {
+						return current_search.id.toLowerCase().includes(prefix.toLowerCase()); }).map(function(current_search) {
 							return {
 								"caption": current_search.id,
 								"value": "\""+current_search.id+"\"::"+current_search.type,
@@ -339,7 +338,7 @@
 					}));
 				} else {
 					callback(null, schema_tables.filter(function(current_search){
-						return current_search.id.includes(prefix); }).map(function(current_search) {
+						return current_search.id.toLowerCase().includes(prefix.toLowerCase()); }).map(function(current_search) {
 							return {
 								"caption": current_search.title,
 								"value": "\""+current_search.id+"\" "+current_search.title.toUpperCase().replace(/ /g,"_"),
