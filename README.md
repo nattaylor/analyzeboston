@@ -12,8 +12,6 @@ Get the latest Ace editor `src-noconflict/` https://github.com/ajaxorg/ace-build
 http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
 
 ## TODO
-
-    
  
  - Examples
     - Error Examples
@@ -23,20 +21,11 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
     - Rollup/Cube
  - Features
     - Proxy (only needed to handle 409s)
-    - Change Examples to dialog
-    - BUG: results for errors
-    - Add datatype to schema for browser and typeahead
-    - Filter results
-    - Typeahead Improvements
-        - BUG: Typehead broken without tablename
-        - Human readable table names
-        - Show datatype in typeahead
+    - Typeahead Improvements: 
         - default transforms (e.g. into decimals, 1) create table of fully qualified names and types 2) implement
         - transform hints: nullif('','')::decimal
-        - Configurable autocomplete? (I think this means search tables until one is set)
     - Layout
         - Resize & fullscreen panels
-        - Improve colors and positioning
  - Project
     - Improve Use of Config
     - Add DEBUG mode (with `console.log()`)
@@ -48,6 +37,14 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
     - Contribute to AnalzeBoston and/or as CKAN extension (See: https://docs.ckan.org/en/latest/extensions/index.html)
  - Icebox
     - Editor Tabs (Do we really need this?)
+    - BUG: results for errors (What value?)
+ - ~Filter results~
+ - ~Layout: Improve colors and positioning~   
+ - ~Add datatype to schema for browser and typeahead~
+ - ~Typeahead Improvements: BUG: Typehead broken without tablename~
+    - ~Typeahead Improvements: Human readable table names~
+    - ~Typeahead Improvements: Show datatype in typeahead~
+    - ~Typeahead Improvements: Configurable autocomplete? (I think this means search tables until one is set)~   
  - ~History~
     - ~show query history~
     - ~Retrieve results~
@@ -71,6 +68,7 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
  - ~Example: 311~
  - ~Deeplinking (with query)~
  - ~Add Editor Saving~
+ - ~Change Examples to dialog~
 
 
 ## Examples

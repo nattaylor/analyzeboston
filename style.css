@@ -232,6 +232,7 @@
 	#history-table {
 		width:100%;
 		table-layout:fixed;
+		padding: 0 1vw;
 	}
 
 	#history-table td {
@@ -251,9 +252,10 @@
 		font-size: smaller;
 	}
 
-	#download {
+	#results-table-actions {
 		position: absolute;
 		top: 25px;
 		left: 230px;
+		white-space: nowrap;
 }
 	}

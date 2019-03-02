@@ -6,7 +6,13 @@
 		if(map[13] && map[91]) {
 			document.querySelector("#execute").click();
 			map = {}
-		}
+		} else if (map[27]) {
+			document.location.hash = "#";
+		}/*else if (map[16] && map[191]) {
+			console.log(document.hasFocus())
+			document.location.hash = "help";
+			map = {}
+		} */
 	}
 
 	renderSchemaBrowser();
@@ -143,12 +149,12 @@
 
 		if(typeof results.success !== 'undefined' && !results.success) {
 			div = document.createElement("div");
-			div.setAttribute("id","results");
+			div.setAttribute("id","results-table");
 			const error_regex = /([^\^]*)\^/
 			error_extract = error_regex.exec(results.error.query[0]);
 			error_msg = (error_extract !== null && error_extract.hasOwnProperty(1)) ? error_extract[1] : results.error.query[0]
 			div.innerHTML = error_msg;
-			document.body.appendChild(div);
+			document.querySelector("#results").appendChild(div);
 			return true;
 		}
 
@@ -179,10 +185,11 @@
 			csv += "\""+fields.join("\",\"")+"\"\n";
 			tsv += fields.join("\t")+"\n";
 		}
-		html+="<div id=\"download\">Download: "
+		html+="<div id=\"results-table-actions\">Download: "
 		html+="<a href=\"data:text/csv;charset=utf-8,"+encodeURI(csv)+"\" target\"_blank\" download=\"results.csv\">CSV</a>&nbsp;";
 		html+="<a href=\"data:text/tsv;charset=utf-8,"+encodeURI(tsv)+"\" target\"_blank\" download=\"results.tsv\">TSV</a>&nbsp;";
-		html+="<a href=\"javascript:copyResults()\">COPY</a>"
+		html+="<a href=\"javascript:copyResults()\">COPY</a>";
+		html+=" <input placeholder=\"Filter...\" size=\"20\" onkeyup=\"filterResultsTable(this)\"/>";
 		html+="</div>"
 		html+="<textarea id=\"results-ta\">"+tsv+"</textarea>"
 		table.innerHTML = html;
@@ -255,9 +262,9 @@
 		for(let table in schema) {
 			let data = schema[table];
 			html += "<h2>" + data.title + "</h2>";
-			html += "<div><input type=\"text\" value=\""+table+"\"></div>"; 
+			html += "<div onclick=\"editor.session.insert(editor.getCursorPosition(), this.innerText)\">"+table+"</div>"; 
 			html += "<ul>" + data.fields.reduce(function(accumulator, currentValue) {
-				return accumulator + "<li>" + currentValue + "</li>";
+				return accumulator + "<li onclick=\"editor.session.insert(editor.getCursorPosition(), this.innerText)\">\"" + currentValue.id + "\"::"+currentValue.type+"</li>";
 			},'') + "</ul>";
 		}
 		document.querySelector("#schema-browser-content").innerHTML = html;
@@ -288,4 +295,13 @@
 
 	function handleEditorChange(e) {
 		localStorage.setItem('editorValue',editor.getValue())
+	}
+
+	function filterResultsTable(e) {
+		document.querySelectorAll("#results-table tbody tr").forEach(function(tr){tr.style.display="table-row"});
+		document.querySelectorAll("#results-table tbody tr").forEach(function(tr){
+			if(!tr.innerText.includes(e.value)) {
+				tr.style.display="none";
+			}
+		});
 	}

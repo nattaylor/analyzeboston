@@ -15,6 +15,7 @@
 		<span><a href="#schema-browser">Schema</a></span>
 		<span><a href="#examples">Examples</a></span>
 		<span><a href="#share">Share</a></span>
+		<span><a href="#feedback">Feedback</a>
 	</nav>
 </div>
 <div id="editor-wrapper"><h2 class="results-title">Query Editor</h2><button id="execute">Run Query</button><div id="editor"></div></div>
@@ -34,6 +35,15 @@
 		<figcaption id="schema-browser-content">
 			<h1>Sharable Link</h1>
 			<textarea id="share-textarea"></textarea>
+		</figcaption>
+	</figure>
+</div>
+<div class="lightbox" id="feedback">
+	<figure>
+		<a href="#" class="closemsg"></a>
+		<figcaption>
+			<h2>Feedback</h2>
+			<p>Contact <a href="mailto:nattaylor@gmail.com">Nat</a></p>
 		</figcaption>
 	</figure>
 </div>
@@ -136,21 +146,35 @@ ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
 		enableLiveAutocompletion: true
 	});
 
+	var schema_tables = Object.entries(schema).map(function(key) {return {"title": key[1].title, "id": key[0]}});
 	var schema_search = {
 		identifierRegexps: [/[a-zA-Z_0-9\.\$\-\u00A2-\uFFFF]/],
 		getCompletions: function(editor, session, pos, prefix, callback) {
-			const regex = /FROM "(.*?)"/gi;
-			m = regex.exec(editor.getValue());
-			table = m[1];
-			callback(null, schema[table].fields.filter(function(word)
-			{ return word.startsWith(prefix); }).map(function(word) {
-				return {
-					//caption: (word.includes('.') ? word.split('.')[1] : "foo"),
-					value: word,
-					score: (word.includes('.') ? 50 : 500),
-					meta: (word.includes('.') ? "table" : "database"),
-				};
-			}));
+			//if (prefix.length === 0) { callback(null, []); return }
+			const regex = /FROM "(.+?)"/gi;
+			m = regex.exec(getCurrentQuery());
+			if(m && schema[m[1]]) {
+				table = m[1];
+				callback(null, schema[table].fields.filter(function(current_search){
+					return current_search.id.startsWith(prefix); }).map(function(current_search) {
+						return {
+							"caption": current_search.id,
+							"value": "\""+current_search.id+"\"::"+current_search.type,
+							"score": (current_search.id.includes('.') ? 50 : 500),
+							"meta": current_search.type,
+						};
+				}));
+			} else {
+				callback(null, schema_tables.filter(function(current_search){
+					return current_search.id.startsWith(prefix); }).map(function(current_search) {
+						return {
+							"caption": current_search.title,
+							"value": "\""+current_search.id+"\" "+current_search.title.toUpperCase().replace(/ /g,"_"),
+							"score": (current_search.id.includes('.') ? 50 : 500),
+							"meta": current_search.type,
+						};
+				}));
+			}
 
 		}
 	}
