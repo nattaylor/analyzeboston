@@ -257,5 +257,20 @@
 		top: 25px;
 		left: 230px;
 		white-space: nowrap;
-}
+	}
+	
+	#results-resize {
+		position: fixed;
+		top: calc(var(--header-height) + 5px);
+		right: 5px;
+	}
+
+	#results.fullscreen {
+		top:calc(var(--header-height));
+		left:0;
+		right:0;
+		background-color:white;
+		bottom: 0;
+		z-index: 10;
+		width:100%;
 	}

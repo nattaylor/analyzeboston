@@ -171,6 +171,9 @@
 		html = "<thead><tr>";
 		headers = []
 		for (var field of results.result.fields) {
+			if(field.id=='_full_text') {
+				continue;
+			}
 			html += "<th title=\""+JSON.stringify(field).replace(/\"/g,"&quot;")+"\">"+field.id+"</th>";
 			headers.push(field.id);
 		}
@@ -181,6 +184,9 @@
 			html += "<tr>";
 			fields = [];
 			for (var field of results.result.fields) {
+				if(field.id=='_full_text') {
+					continue;
+				}
 				html += "<td>"+record[field.id]+"</td>";
 				fields.push(record[field.id])
 			}
@@ -389,4 +395,8 @@
 				map = {}
 			} */
 		}
+	}
+
+	function toggleFullscreen(selector) {
+		document.querySelector(selector).classList.toggle("fullscreen");
 	}

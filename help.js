@@ -5,6 +5,7 @@ var help = 	`<figure>
 			<div><input type="checkbox" id="welcome" onclick="toggleWelcome()"><label for="welcome">Show Welcome on startup</label></div>
 			<p><strong>Analyze Boston</strong> at <a href="https://data.boston.gov/">data.boston.gov</a> is "is the City of Boston's open data hub" with over 134 datasets and this Analyze Boston SQL Client is a tool for executing queries and displaying the results.</p>
 			<p><strong>Analyze Boston SQL Client</strong> is a tool for building SQL queries to run against the Analyze Boston dataset.</p>
+			<p>You can watch a video introduction here <a href="https://youtu.be/eKUrV0yQCW4">https://youtu.be/eKUrV0yQCW4</a></p>
 			<p><button onclick="getStarted();">Get Started</button> with an example.</p>
 			<p>Note: this interface is largely inspired Snowflake Cloud Datawarehouse</p>
 			<h2>User Guide</h2>
@@ -121,4 +122,5 @@ type "blah" does not exist
 relation "6ddcd912-32a0-43df-9908-63574f8c7e77x" does not exist
 500 Error
  * You compared data of different types
+ * Ambiguous column names
  */

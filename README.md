@@ -21,8 +21,6 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
  
  - Examples
     - Error Examples
-    - Window query
-    - CTE
     - Rollup/Cube
  - Features
     - Typeahead Improvements: 
@@ -40,6 +38,7 @@ http://docs.ckan.org/en/latest/maintaining/datastore.html#the-datastore-api
  - Icebox
     - Editor Tabs (Do we really need this?)
     - BUG: results for errors (What value?)
+ - ~Example: CTE & Window~
  - ~Improve Use of Config~   
  - ~Proxy (only needed to handle 409s)~
  - ~Separate scripts and CSS~

@@ -54,5 +54,50 @@ ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC`,
     point("lat"::decimal,"long"::decimal) <@ circle '((42.370024,-71.0355957),0.01)' within1km
 FROM "12cb3883-56f5-47de-afa5-3b1cf61b257b" CRIME_INCIDENT_REPORTS
 WHERE "district"::text = 'A7' and "location"::text != '(0.00000000, 0.00000000)'
-LIMIT 100`
+LIMIT 100`,
+`WITH RANKED AS (SELECT
+    RANK() OVER (ORDER BY sum("DECLARED_VALUATION"::decimal) DESC) RANK,
+    "Property_ID"::text,
+    MAX("DECLARED_VALUATION"::decimal) AS "TOTAL_VALUE"
+FROM "6ddcd912-32a0-43df-9908-63574f8c7e77" APPROVED_BUILDING_PERMITS
+WHERE
+    "ZIP"::text = '02128'
+    AND "OWNER"::text not in (
+        'MASSACHUSETTS PORT AUTHORITY',
+        'CITY OF BOSTON',
+        'BOSTON HOUSING AUTHORITY',
+        'ROMAN CATH ARCH OF BOS',
+        'BROOKE CHARTER SCHOOL',
+        'BROOKE CHARTER SCHOOL '
+        'CITY OF BOSTON	',
+        'MASSACHUSETTS PORT AUTH',
+        'MASS PORT AUTHORITY',
+        'CITY  OF  BOSTON',
+        'BROOKE CHARTER SCHOOL '
+    )
+    AND "OCCUPANCYTYPE"::text != 'Comm'
+GROUP BY "Property_ID"::text
+ORDER BY "TOTAL_VALUE" desc)
+SELECT
+    r.RANK,a.*
+FROM "6ddcd912-32a0-43df-9908-63574f8c7e77" a
+    LEFT JOIN RANKED r on a."Property_ID" = r."Property_ID"
+WHERE
+     "ZIP"::text = '02128'
+    AND "OWNER"::text not in (
+        'MASSACHUSETTS PORT AUTHORITY',
+        'CITY OF BOSTON',
+        'BOSTON HOUSING AUTHORITY',
+        'ROMAN CATH ARCH OF BOS',
+        'BROOKE CHARTER SCHOOL',
+        'BROOKE CHARTER SCHOOL '
+        'CITY OF BOSTON	',
+        'MASSACHUSETTS PORT AUTH',
+        'MASS PORT AUTHORITY',
+        'CITY  OF  BOSTON',
+        'BROOKE CHARTER SCHOOL '
+    )
+    AND "OCCUPANCYTYPE"::text != 'Comm'
+ORDER BY RANK ASC
+limit 100`
 ]
