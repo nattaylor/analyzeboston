@@ -50,26 +50,13 @@
 		</figcaption>
 	</figure>
 </div>
-<div class="lightbox" id="help">
-</div>
+<div class="lightbox" id="help"></div>
 <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="src-noconflict/ext-language_tools.js"></script>
 <script src="config.js"></script>
 <script src="schema.js"></script>
 <script src="queries.js"></script>
 <script src="help.js"></script>
-<script>
-	var editor = ace.edit("editor");
-	editor.session.setMode("ace/mode/sql");
-	editor.renderer.setScrollMargin(10, 10, 10, 10);
-	
-	var langTools = ace.require("ace/ext/language_tools");
-	editor.setOptions({
-		enableBasicAutocompletion: true,
-		//enableSnippets: true,
-		enableLiveAutocompletion: true
-	});
-</script>
 <script src="app.js"></script>
 </body>
 </html>

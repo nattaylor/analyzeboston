@@ -173,5 +173,4 @@ Cost
 ```
 ### Refactoring Thoughts
 
-* Use `import` for schema, queries, config and help (Note: requires `'use strict';`)
 * Move ace setup into app.js

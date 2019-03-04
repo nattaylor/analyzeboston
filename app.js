@@ -6,13 +6,8 @@
  * Note: messy abuses of global namespace.  Oops.
  * 
  */
- 	/*
+ 	
 	'use strict';
- 	import { config } from './config.js';
- 	import { schema } from './schema.js';
- 	import { help }   from './help.js';
- 	import { queries }   from './queries.js';
- 	*/
 
 	//Setup the UI
 	renderSchemaBrowser();
@@ -27,6 +22,17 @@
 	window.addEventListener('hashchange', renderShare, false);
 	document.addEventListener("itemInserted", renderQueryHistory, false);
 	document.querySelector("#execute").addEventListener("click", executeQuery);
+
+	var editor = ace.edit("editor");
+	editor.session.setMode("ace/mode/sql");
+	editor.renderer.setScrollMargin(10, 10, 10, 10);
+	
+	var langTools = ace.require("ace/ext/language_tools");
+	editor.setOptions({
+		enableBasicAutocompletion: true,
+		//enableSnippets: true,
+		enableLiveAutocompletion: true
+	});
 	editor.on("change",handleEditorChange);
 
 	
@@ -144,6 +150,7 @@
 
 	function queryExecutionListener() {
 
+		let results;
 		//Build results if not provided by endpoint
 		if (this.status == 500) {
 			results = {"success": false, "error": { "query": ["(500ErrorFromException) Exception occurred during query execution after successful query parsing."] } }
@@ -172,8 +179,8 @@
 		removeResultsTable();
 		var table = document.createElement("table");
 		table.setAttribute("id","results-table");
-		html = "<thead><tr>";
-		headers = []
+		let html = "<thead><tr>";
+		let headers = []
 		for (var field of results.result.fields) {
 			if(field.id=='_full_text') {
 				continue;
@@ -181,12 +188,12 @@
 			html += "<th title=\""+JSON.stringify(field).replace(/\"/g,"&quot;")+"\">"+field.id+"</th>";
 			headers.push(field.id);
 		}
-		csv="\""+headers.join("\",\"")+"\"\n";
-		tsv=headers.join("\t")+"\n";
+		let csv = "\""+headers.join("\",\"")+"\"\n";
+		let tsv = headers.join("\t")+"\n";
 		html += "</thead></tr>";
 		for (var record of results.result.records) {
 			html += "<tr>";
-			fields = [];
+			let fields = [];
 			for (var field of results.result.fields) {
 				if(field.id=='_full_text') {
 					continue;
@@ -256,7 +263,7 @@
 		var table = document.createElement("table");
 		table.setAttribute("id","history-table");
 		table.setAttribute("width","100%");
-		html = "<thead><tr><th width=\"20\">Index</th><th>SQL Text</th><th width=\"100\">Row Count</th></tr></thead>";
+		let html = "<thead><tr><th width=\"20\">Index</th><th>SQL Text</th><th width=\"100\">Row Count</th></tr></thead>";
 		html += queryHistory.reduce(function(accumulator, currentValue, currentIndex, array) {
 			if(!currentValue.success) {
 				return accumulator;
@@ -295,7 +302,7 @@
 
 	function renderExamples() {
 		let figure = document.createElement("figure");
-		html="<a href=\"#\" class=\"closemsg\"></a><figcaption>";
+		let html="<a href=\"#\" class=\"closemsg\"></a><figcaption>";
 		html += "<h1>Examples</h1>";
 		html += "<div><button onclick=\"insertSelectionIntoEditor()\">Set editor contents to selected query</button></div>";
 		html += "<textarea>" + queries.reduce(function(acc, cur) {

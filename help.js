@@ -1,4 +1,4 @@
-var help = 	`<figure>
+const help = 	`<figure>
 		<a href="#" class="closemsg"></a>
 		<figcaption>
 			<h1>Welcome (Help)</h1>
@@ -112,7 +112,6 @@ ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
 			</ul>
 		</figcaption>
 	</figure>`
-
 
 /*
 column "foo" does not exist
