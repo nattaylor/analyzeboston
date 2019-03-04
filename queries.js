@@ -1,4 +1,4 @@
-queries = [
+var queries = [
 `SELECT
 	TO_CHAR("ISSUED_DATE"::timestamp, 'YYYY') AS YEAR,
 	COUNT(*) PERMITS,

@@ -1,4 +1,9 @@
 <?php
+
+	/**
+	 * Proxy Requests via the origin because CORS
+	 */
+	
 	$config = file_get_contents("config.js");
 
 	preg_match_all('/\{.*\}/sm', $config, $json);

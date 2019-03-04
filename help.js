@@ -113,6 +113,7 @@ ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
 		</figcaption>
 	</figure>`
 
+
 /*
 column "foo" does not exist
 	* If you meant to reference a column, then you forgot to doublequote it

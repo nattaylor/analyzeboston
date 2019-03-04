@@ -6,8 +6,13 @@
  * Note: messy abuses of global namespace.  Oops.
  * 
  */
-
-
+ 	/*
+	'use strict';
+ 	import { config } from './config.js';
+ 	import { schema } from './schema.js';
+ 	import { help }   from './help.js';
+ 	import { queries }   from './queries.js';
+ 	*/
 
 	//Setup the UI
 	renderSchemaBrowser();
@@ -49,6 +54,7 @@
 			document.querySelector('#welcome').checked = true;
 		}
 
+		//Load Shared Query if set
 		if(document.location.hash.startsWith('#share')) {
 			//TODO: Fix since there are lots of failure cases for this
 			editor.setValue(atob(document.location.hash.slice(13)));
@@ -68,9 +74,8 @@
 
 	function executeQuery() {
 		removeResultsTable();
-		if (document.querySelector("#results-table") !== null) {
-			document.querySelector("#results-table").parentNode.removeChild(document.querySelector("#results-table"));
-		}
+		
+		log([{"label":"Running Query","logs":[getCurrentQuery()]}]);
 		var oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", queryExecutionListener);
 		oReq.addEventListener("error", queryExecutionFailure);
@@ -87,7 +92,7 @@
 	 *  	2. if the current line has a semicolin, end here else walk forward
 	 * 
 	 * 
-	 * @return {[type]} [description]
+	 * @return string the current query
 	 */
 	function getCurrentQuery() {
 		if(editor.getSelectedText().length>0) {
@@ -120,7 +125,6 @@
 			return editorRows.slice(queryStart, queryEnd+1).join("\n").trim().replace(";","");
 		}
 	}
-
 
 	function removeResultsTable(){
 		if (document.querySelector("#results-table") !== null) {
@@ -323,7 +327,25 @@
 		document.querySelector("#help").innerHTML = help;
 	}
 
+
+	/**
+	 * Instruct Ace Autocompletion how to find matches
+	 *
+	 * More info at https://github.com/ajaxorg/ace/wiki/How-to-enable-Autocomplete-in-the-Ace-editor
+	 *
+	 *   1. Ace calls getCompletions() on keypresses and passes `prefix`
+	 *   2. First, attempt to detect if user already has a table.  If so, search that table's columns.  If not, search table names.
+	 *   3. In callback() the second argument is what to search (some dataset) and how to search it (e.g. filter())
+	 *   4. Check if each item  (`current_search`) contains the search term (`prefix`)
+	 *   5. return an object
+	 *     - caption: what shows up in the typeahead dialog
+	 *     - value: what gets autocompleted, if selected
+	 *     - meta: appears to the right of caption in typeahead dialog
+	 *     - score: how to rank results
+	 * 
+	 */
 	function setupAutocomplete() {
+		// Generate the list of tables from the schema
 		var schema_tables = Object.entries(schema).map(function(key) {return {"title": key[1].title, "id": key[0]}});
 		var schema_search = {
 			identifierRegexps: [/[a-zA-Z_0-9\.\$\-\u00A2-\uFFFF]/],
@@ -369,7 +391,7 @@
 		if(localStorage.getItem('debug') === "true") {
 			entries.forEach(function(entry) {
 				if(typeof entry === 'object') {
-					console.group(entry.label);
+					console.groupCollapsed(entry.label);
 					entry.logs.forEach(log => console.log(log))
 					console.groupEnd();
 				} else {

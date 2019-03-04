@@ -1,5 +1,18 @@
 <?php
-	$ch = curl_init("https://data.boston.gov/api/3/action/package_search?q=*:*&rows=150");
+/**
+ * Generate schema.js from the datasets
+ *
+ * Usage: php -f schema-generator.php > schema.js
+ * 
+ */
+
+	$config = file_get_contents("config.js");
+
+	preg_match_all('/\{.*\}/sm', $config, $json);
+
+	$host = json_decode( $json[0][0] )->host;
+
+	$ch = curl_init($host."/api/3/action/package_search?q=*:*&rows=10");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	$result = curl_exec($ch);
 	$package_list = json_decode($result)->result->results;
@@ -9,7 +22,7 @@
 
 	foreach ($package_list as $package) {
 		
-		$ch = curl_init("https://data.boston.gov/api/3/action/datastore_search?limit=0&id=".$package->resources[0]->id);
+		$ch = curl_init($host."/api/3/action/datastore_search?limit=0&id=".$package->resources[0]->id);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
 		$result = json_decode(curl_exec($ch));
 		curl_close($ch);
