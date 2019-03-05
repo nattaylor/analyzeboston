@@ -10,11 +10,12 @@
 	'use strict';
 
 	//Setup the UI
+	setupEditor();
+	setupEditorAutocomplete();
 	renderSchemaBrowser();
 	renderExamples();
 	renderHelp();
 	renderQueryHistory();
-	setupAutocomplete();
 	setupKeyboardShortcuts();
 	setupStorageAndCheckHashes();
 
@@ -23,17 +24,19 @@
 	document.addEventListener("itemInserted", renderQueryHistory, false);
 	document.querySelector("#execute").addEventListener("click", executeQuery);
 
-	var editor = ace.edit("editor");
-	editor.session.setMode("ace/mode/sql");
-	editor.renderer.setScrollMargin(10, 10, 10, 10);
-	
-	var langTools = ace.require("ace/ext/language_tools");
-	editor.setOptions({
-		enableBasicAutocompletion: true,
-		//enableSnippets: true,
-		enableLiveAutocompletion: true
-	});
-	editor.on("change",handleEditorChange);
+	function setupEditor() {
+		window.editor = ace.edit("editor");
+		editor.session.setMode("ace/mode/sql");
+		editor.renderer.setScrollMargin(10, 10, 10, 10);
+		
+		window.langTools = ace.require("ace/ext/language_tools");
+		editor.setOptions({
+			enableBasicAutocompletion: true,
+			//enableSnippets: true,
+			enableLiveAutocompletion: true
+		});
+		editor.on("change",handleEditorChange);
+	}
 
 	
 	function setupStorageAndCheckHashes() {
@@ -351,7 +354,7 @@
 	 *     - score: how to rank results
 	 * 
 	 */
-	function setupAutocomplete() {
+	function setupEditorAutocomplete() {
 		// Generate the list of tables from the schema
 		var schema_tables = Object.entries(schema).map(function(key) {return {"title": key[1].title, "id": key[0]}});
 		var schema_search = {
