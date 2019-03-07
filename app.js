@@ -362,9 +362,9 @@
 			getCompletions: function(editor, session, pos, prefix, callback) {
 				//if (prefix.length === 0) { callback(null, []); return }
 				const regex = /FROM "([a-z0-9\-]+)"/gi;
-				m = regex.exec(getCurrentQuery());
+				let m = regex.exec(getCurrentQuery());
 				if(m && schema[m[1]]) {
-					table = m[1];
+					let table = m[1];
 					callback(null, schema[table].fields.filter(function(current_search){
 						return current_search.id.toLowerCase().includes(prefix.toLowerCase()); }).map(function(current_search) {
 							return {
