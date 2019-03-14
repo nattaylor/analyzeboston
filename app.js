@@ -23,6 +23,7 @@
 	window.addEventListener('hashchange', renderShare, false);
 	document.addEventListener("itemInserted", renderQueryHistory, false);
 	document.querySelector("#execute").addEventListener("click", executeQuery);
+	window.addEventListener('hashchange',function(){if(document.location.hash=='#code'){renderCode();}});
 
 	function setupEditor() {
 		window.editor = ace.edit("editor");
@@ -44,6 +45,7 @@
 			localStorage.setItem('proxy',true);
 		}
 		if(localStorage.getItem('proxy') === 'true') {
+			config.datastore_search_sql_noproxy = config.datastore_search_sql;
 			config.datastore_search_sql = document.location.origin+document.location.pathname+"query-proxy.php?sql=";
 		}
 
@@ -172,7 +174,7 @@
 	}
 
 	function renderError(results) {
-		div = document.createElement("div");
+		let div = document.createElement("div");
 		div.setAttribute("id","results-table");
 		div.innerHTML = "<pre>"+results.error.query[0]+"</pre>";
 		document.querySelector("#results").appendChild(div);
@@ -431,4 +433,38 @@
 
 	function toggleFullscreen(selector) {
 		document.querySelector(selector).classList.toggle("fullscreen");
+	}
+
+	/**
+	 * Renders the "Code" dialog
+	 *
+	 */
+	function renderCode() {
+		let url = config.datastore_search_sql_noproxy+rawurlencode(getCurrentQuery());
+		let php = `<?php
+
+const URL = "${url}";
+
+$raw = file_get_contents(URL);
+
+$results = json_decode($raw);
+
+foreach($results->result->records as $row_num=>$record) {
+	foreach($results->result->fields as $field) {
+		echo implode("\\t",array($row_num,$field->id,$record->{$field->id})).PHP_EOL;
+	}
+}
+`;
+		document.querySelector("#code").innerHTML = `<figure>
+		<a href="#" class="closemsg"></a>
+		<figcaption>
+			<h2>Code</h2>
+			<p>Use these code snippets to bootstrap an application based on a query you write.</p>
+			<h3>Raw URL</h3>
+			<p>Retreive the response for this URL and parse the JSON results any way you like.</p>
+			<code style="white-space:nwrap;overflow:scroll;">${url}</code>
+			<h3>PHP</h3>
+			<textarea style="min-height:auto;height:auto;white-space:nowrap;" rows="15">${php}</textarea>
+			</figcaption>
+		</figure>`;
 	}

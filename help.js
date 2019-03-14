@@ -9,34 +9,45 @@ const help = 	`<figure>
 			<p><button onclick="getStarted();">Get Started</button> with an example.</p>
 			<p>Note: this interface is largely inspired Snowflake Cloud Datawarehouse</p>
 			<h2>User Guide</h2>
-			<h3>Query Editor</h3>
+
+			<h3>Panel: Query Editor</h3>
 			<p>"Simply" write a valid SQL statement and click the "Run Query" button to run the query and then display the results (or error) in the panel to the right.</p>
 			<p>Your worksheet may contain multiple queries.  Your cursor position within the editor controls which query is executed.  If you have an editor selection, then the selection will be executed.</p>
 			<p>Use <code>ctrl + space</code> at any time to bring up the autocomplete menu.</p>
 			<p>Use <code>command + Enter</code> to submit the current query.</p>
-			<h3>Query Results</h3>
+
+			<h3>Panel: Query Results</h3>
 			<p>The query results panel contains query results, including errors</p>
 			<p>Successful queries are displayed as a table</p>
 			<p>Controls appear above the table to download the results as a CSV, TSV, or copy to clipboard</p>
 			<p>You can also filter the results by typing a search string</p>
-			<h3>Query History</h3>
+
+			<h3>Panel: Query History</h3>
 			<p>The Query History panel displays your query history</p>
 			<p>Click any row to restore the query results</p>
 			<p>Click the SQL Text to be prompted to insert that into the editor</p>
+
 			<h3>Keyboard Shorcuts</h3>
 			<ul>
 				<li><code>command + Enter</code> Run current query</li>
 				<li><code>Esc</code> Dismiss the modal</li>
 				<li><code>ctrl + space</code> bring up autocomplete</li>
 			</ul>
-			<h3>Schema Browser</h3>
+
+			<h3>Menu: Schema Browser</h3>
 			<p>Click "Schema Browser" to see the available data tables and column names</p>
 			<p>Click a field to insert it into the editor at the current cursor position</p>
-			<h3>Examples</h3>
+
+			<h3>Menu: Examples</h3>
 			<p>Click "Examples" to see example queries.</p>
 			<p>Select a query then click the "Insert" button to insert it into the editor</p>
-			<h3>Link</h3>
+
+			<h3>Menu: Code</h3>
+			<p>Click "Code" to generate code for your current query that you could use in another application</p>
+
+			<h3>Menu: Link</h3>
 			<p>Click "Link" to get a shareable link with your current worksheet embedded.  You may also bookmark such a link</p>
+
 			<h3>Common Workflow</h3>
 			<p>A common workflow is as follows:</p>
 			<ol>
@@ -59,9 +70,10 @@ WHERE
 GROUP BY TO_CHAR("open_dt"::timestamp, 'YYYY')
 ORDER BY TO_CHAR("open_dt"::timestamp, 'YYYY') ASC</code></pre>
 <table border="1"><thead><tr><th>year</th><th>total_reports</th><th>daily_average</th></tr></thead><tbody><tr><td>2011</td><td>2764</td><td>7</td></tr><tr><td>2012</td><td>7624</td><td>20</td></tr><tr><td>2013</td><td>8996</td><td>24</td></tr><tr><td>2014</td><td>9125</td><td>25</td></tr><tr><td>2015</td><td>11209</td><td>30</td></tr><tr><td>2016</td><td>10237</td><td>28</td></tr><tr><td>2017</td><td>12961</td><td>35</td></tr><tr><td>2018</td><td>14212</td><td>38</td></tr><tr><td>2019</td><td>2209</td><td>38</td></tr></tbody></table>
+
 			<h2>Troubleshooting</h2>
-			<p><strong>To see error messages</strong> enable this extension <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">allow-control-allow-origin:*</a> otherwise you will just get generic errors.</p>
 			<p>The tool uses CKAN DataStore, which is a thin layer on top of a PostgreSQL database, so the PostgreSQL docs are very helpful.  MySQL users may want to read <a href="https://wiki.postgresql.org/wiki/Things_to_find_out_about_when_moving_from_MySQL_to_PostgreSQL">Things to find out about when moving from MySQL to PostgreSQL</a>.</p>
+			<div style="background-color:lightyellow;border:1px solid gray;padding:1vw;margin:1vw;">This section is a work in progress, as we try to strike a balance between being concise yet helpful.</div>
 			<p>Common Problems Include: </p>
 			<ul>
 				<li>500 error
