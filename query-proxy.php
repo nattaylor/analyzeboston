@@ -2,6 +2,8 @@
 
 	/**
 	 * Proxy Requests via the origin because CORS
+	 *
+	 * $referrer is so they can track who is making the queries
 	 */
 	
 	$config = file_get_contents("config.js");
@@ -10,7 +12,9 @@
 
 	$base = json_decode( $json[0][0] )->datastore_search_sql;
 
-	$ch = curl_init($base.rawurlencode($_GET['sql']));
+	$referrer = hash("md5",implode("",$_SERVER['REQUEST_SCHEME']."://", $_SERVER['HTTP_HOST'], $_SERVER['SCRIPT_NAME']));
+
+	$ch = curl_init($base.rawurlencode($_GET['sql'])."&referrer=$referrer");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_VERBOSE, false);
 	$result = curl_exec($ch);
