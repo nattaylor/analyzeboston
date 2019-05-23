@@ -12,8 +12,9 @@
 
 	$host = json_decode( $json[0][0] )->host;
 
-	$ch = curl_init($host."/api/3/action/package_search?q=*:*&rows=10");
+	$ch = curl_init($host."/api/3/action/package_search?q=*:*&rows=1000");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_VERBOSE, true);
 	$result = curl_exec($ch);
 	$package_list = json_decode($result)->result->results;
 	curl_close($ch);
