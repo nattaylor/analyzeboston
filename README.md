@@ -98,15 +98,15 @@ Completely manual.  Goodluck!
  - **Project** (ways to improve the project and code within)
     - DRY the modals (with `<template>` etc)
     - Automated Testing
-    - Convert to library/Class
-    - Adopt a framework
-    - Build Script
+    - Refactor to IFFE https://developer.mozilla.org/en-US/docs/Glossary/IIFE
+    - Build Script improvements like parellel curl, usage, etc
     - Contribute to AnalzeBoston and/or as CKAN extension (See: https://docs.ckan.org/en/latest/extensions/index.html)
- - **Icebox** (Things we won't do)
+ - **Icebox** (Things I'm not planning to implement)
     - Editor Tabs (Do we really need this?)
     - BUG: results for errors (Doesn't seem like this is needed?)
     - Typehead: default transforms (e.g. into decimals, 1) create table of fully qualified names and types 2) implement
     - Typeahad: transform hints: nullif('','')::decimal
+    - Adopt a framework
  - **Done**
  - ~~Developer Guide~~
  - ~~Layout: Resize & fullscreen panels~~
